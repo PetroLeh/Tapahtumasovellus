@@ -10,6 +10,7 @@ def login(username, password) -> bool:
         return False
     if check_password_hash(user.password, password):
         session["user_id"] = user.id
+        session["username"] = username
         session["is_admin"] = user.is_admin
         return True
     return False
@@ -17,13 +18,15 @@ def login(username, password) -> bool:
 def create(username, password) -> bool:
     hash_value = generate_password_hash(password)
     try:        
-        sql = "INSERT INTO users (username, password, is_admin) VALUES (:username, :password, :admin)"
-        db.session.execute(sql, {"username":username, "password":hash_value, "admin":(username=="admin")})
+        sql = "INSERT INTO users (username, password, is_admin) VALUES (:username, :password, FALSE)"
+        db.session.execute(sql, {"username":username, "password":hash_value})
         db.session.commit()
     except:
         return False
     return login(username, password)
 
 def logout():
-    del session["is_admin"]
-    del session["user_id"]
+    if session.get("user_id"):
+        del session["is_admin"]
+        del session["user_id"]
+        del session["username"]

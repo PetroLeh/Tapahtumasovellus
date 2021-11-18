@@ -14,4 +14,24 @@ def login():
     if users.login(username, password):
         return redirect("/")
     else:
-        return "pöö"
+        return "kirjautuminen ei onnistunut"
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "GET":
+        return render_template("register.html")
+    elif request.method == "POST":
+        username = request.form["username"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
+        if password1 != password2:
+            return "salasanat olivat erit"
+        if users.create(username, password1):
+            return redirect("/")
+        else:
+            return "rekisteröinti ei onnistunut"
+
+@app.route("/logout")
+def logout():
+    users.logout()
+    return redirect("/")
