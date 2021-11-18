@@ -1,10 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Etusivu{% endblock %}
 {% block page_content %}
-    <div class="container p-3 my-3 border">
-        <h3>Tapahtumakalenteri</h3>
-    </div>
-    <hr>
 {% if session.username %}
   {% if session.is_admin %}
     <div class="container">
@@ -12,11 +8,11 @@
     </div>
     <hr>
   {% endif %}
-    <div class="container border">
-        <p>{{ session.username }}: <span><a href="/logout">kirjaudu ulos</a></span></p>        
+    <div class="container border p-2 mb-2">
+        <p>{{ session.username }}: <span>  <a href="/logout">kirjaudu ulos</a></span></p>        
     </div>
 {% else %}
-    <div class="container border">
+    <div class="container border p-2 mb-2">
         <div class="row">
             <div class="col-2">
                 <a href="/login">kirjaudu sisään</a> 
@@ -27,4 +23,35 @@
         </div>       
     </div>
 {% endif %}
+    <div class="container p-3 border shadow mb-5 bg-white rounded">
+        <h5 class="text-center">Tapahtumat</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tapahtuman kuvaus</th>
+                    <th>alkuaika</th>
+                    <th>ilmoittaja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in eventlist %}
+                <tr>
+                    <td>{{ event.description }}</td>
+                    {% if not event.start_time %}
+                        <td>ei ilmoitettu</td>
+                    {% else %}
+                        <td>{{ event.start_time.strftime("%d.%m.%Y %H:%M") }}</td>
+                    {% endif %}
+                    <td>{{ event.username }}
+                        {% if event.username == session.username %}
+                            <span style="color: grey;"> (sinä)</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+<!--    <iframe width="425" height="350" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-8.876953125000002%2C57.326521225217064%2C47.28515625000001%2C70.61261423801925&amp;layer=mapnik" style="border: 1px solid black"></iframe>
+-->
+    </div>
 {% endblock %}

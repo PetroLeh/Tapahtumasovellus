@@ -7,11 +7,17 @@
         <title>Tapahtumakalenteri - {% block title %}{% endblock %}</title>
     </head>
     <body>
+        <div class="container p-3 border shadow mb-5 mt-3 bg-white rounded">
+            <h3 class="text-center">Tapahtumakalenteri</h3>
+            {% if not session.user_id %}
+            <p class="text-center" style="color: rgb(170, 170, 170);">(et ole kirjautuneena sisään)</p>
+            {% endif %}
+        </div>
+        <hr>
         {% block page_content %}
         {% endblock %}
-
         <footer class="text-center" style="position: fixed; bottom: 0px; width: 100%;">
-            <div class="text-center p-2" style="background-color: rgb(225, 232, 255); color: rgb(112, 90, 153)">
+            <div class="text-center p-2" style="background-color: rgb(225, 230, 255); color: rgb(110, 90, 153)">
                 Helsingin yliopiston tietojenkäsittelytieteen harjoitustyö - &COPY; Petro Lehtonen
             </div>
         </footer>
