@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Luo käyttäjätunnus{% endblock %}
+{% block page_content %}
+    <div class="container p-3 my-3 border">
+        <h3>Tapahtumakalenteri</h3>
+    </div>
+    <hr>
+    <div class="container p-2 border">
+        <form action="/register" method="POST" class="was-validated">
+            <div class="row">
+                <div class="col-2">
+                    <h5>Luo käyttäjätunnus</h5>
+                </div>
+                <div class="col">
+                    <a href="/">kirjaudu olemassa olevalla tunnuksella</a>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="username">käyttäjätunnus:</label>
+                <input type="text" class="form-control" name="username" placeholder="tunnus" id="username" required>
+                <div class="invalid-feedback">Ei voi jättää tyhjäksi</div>
+            </div>
+            <div class="form-group">
+                <label for="password1">salasana:</label>
+                <input type="password" class="form-control" name="password1" placeholder="salasana" id="password1" required>
+                <div class="invalid-feedback">Ei voi jättää tyhjäksi</div>
+            </div>
+            <div class="form-group">
+                <label for="password2">salasana uudelleen:</label>
+                <input type="password" class="form-control" name="password2" placeholder="salasana uudelleen" id="password2" required>
+                <div class="invalid-feedback">Ei voi jättää tyhjäksi</div>
+            </div>
+            <input type="submit" value="rekisteröi" class="btn btn-primary"/>
+        </form>
+    </div>
+{% endblock %}
