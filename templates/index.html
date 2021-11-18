@@ -1,5 +1,32 @@
 {% extends "layout.html" %}
 {% block title %}Etusivu{% endblock %}
 {% block page_content %}
-<p>Etusivu</p>
+  <div class="container p-3 my-3 border">
+      <h3>Etusivu</h3>
+  </div>
+  <hr>
+{% if session.username %}
+  {% if session.is_admin %}
+    <p>ADMIN</p>
+    <hr>
+  {% endif %}
+{% else %}
+  <div class="container p-2 border">
+      <form action="/login" method="POST">
+          <h5>kirjaudu sisään</h5><br>
+          <div class="form-group">
+            <label for="username">käyttäjätunnus:</label>
+            <input type="text" class="form-control" name="username" placeholder="tunnus" id="username"/>
+          </div>
+          <div class="form-group">
+            <label for="password">salasana:</label>
+            <input type="password" class="form-control" name="password" placeholder="salasana" id="password"/>
+          </div>
+          <input type="submit" value="kirjaudu" class="btn btn-primary"/>
+          <a href="/register">luo tunnus</a> 
+      </form>
+  </div>
+
+{% endif %}
+
 {% endblock %}
