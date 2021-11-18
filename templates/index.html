@@ -7,35 +7,24 @@
     <hr>
 {% if session.username %}
   {% if session.is_admin %}
-    <p>ADMIN</p>
+    <div class="container">
+        <p style="background-color: cadetblue; color:aliceblue;">ADMIN</p>
+    </div>
     <hr>
   {% endif %}
     <div class="container border">
-        <p>{{ session.username }}</p>
-        <a href="/logout">kirjaudu ulos</a>
+        <p>{{ session.username }}: <span><a href="/logout">kirjaudu ulos</a></span></p>        
     </div>
 {% else %}
-    <div class="container p-2 border">
-        <form action="/login" method="POST">
-            <div class="row">
-                <div class="col-2">
-                    <h5>kirjaudu sisään</h5>
-                </div>
-                <div class="col">
-                    <a href="/register">luo tunnus</a>
-                </div>
+    <div class="container border">
+        <div class="row">
+            <div class="col-2">
+                <a href="/login">kirjaudu sisään</a> 
             </div>
-            <br>
-            <div class="form-group">
-                <label for="username">käyttäjätunnus:</label>
-                <input type="text" class="form-control" name="username" placeholder="tunnus" id="username">
+            <div class="col">
+                <a href="/register">luo tunnus</a>
             </div>
-            <div class="form-group">
-                <label for="password">salasana:</label>
-                <input type="password" class="form-control" name="password" placeholder="salasana" id="password">
-            </div>
-            <input type="submit" value="kirjaudu" class="btn btn-primary"/>
-        </form>
+        </div>       
     </div>
 {% endif %}
 {% endblock %}
