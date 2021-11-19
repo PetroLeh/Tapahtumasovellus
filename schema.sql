@@ -10,5 +10,6 @@ CREATE TABLE events (
     user_id INTEGER,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
-    description TEXT
+    description TEXT,
+    info TEXT
 )
