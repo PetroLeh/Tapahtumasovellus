@@ -6,19 +6,48 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
         <title>Tapahtumakalenteri - {% block title %}{% endblock %}</title>
     </head>
-    <body>
+    <body style="background-color: rgba(240, 240, 255, 0.7);">
         <div class="container p-3 border shadow mb-5 mt-3 bg-white rounded">
             <h3 class="text-center">Tapahtumakalenteri</h3>
             {% if not session.user_id %}
-            <p class="text-center" style="color: rgb(170, 170, 170);">(et ole kirjautuneena sisään)</p>
+              <p class="text-center" style="color: rgb(170, 170, 170);">(et ole kirjautuneena sisään)</p>
             {% endif %}
         </div>
         <hr>
+        {% if session.is_admin %}
+            <div class="container">
+                <p class="text-center" style="background-color: cadetblue; color:aliceblue;">ADMIN</p>
+            </div>
+            <hr>
+        {% endif %}
+        {% if session.user_id %}
+        <div class="container border p-2 mb-2 bg-white">
+            <div class="row">
+                <div class="col-3">
+                    <p>{{ session.username }}: <span>  <a href="/logout">kirjaudu ulos</a></span></p>
+                </div>
+                <div class="col-2">
+                    <a href="/create/event">luo tapahtuma</a>
+                </div>
+            </div>                
+        </div>
+        {% else %}
+        <div class="container border p-2 mb-2 bg-white">
+            <div class="row">
+                <div class="col-2">
+                    <a href="/login">kirjaudu sisään</a> 
+                </div>
+                <div class="col">
+                    <a href="/register">luo tunnus</a>
+                </div>
+            </div>       
+        </div>
+        {% endif %}
         {% block page_content %}
         {% endblock %}
         <footer class="text-center" style="position: fixed; bottom: 0px; width: 100%;">
             <div class="text-center p-2" style="background-color: rgb(225, 230, 255); color: rgb(110, 90, 153)">
-                Helsingin yliopiston tietojenkäsittelytieteen harjoitustyö - &COPY; Petro Lehtonen
+                Helsingin yliopiston tietojenkäsittelytieteen harjoitustyö - Petro Lehtonen
             </div>
         </footer>
     </body>

@@ -1,29 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Etusivu{% endblock %}
 {% block page_content %}
-{% if session.username %}
-  {% if session.is_admin %}
-    <div class="container">
-        <p style="background-color: cadetblue; color:aliceblue;">ADMIN</p>
-    </div>
-    <hr>
-  {% endif %}
-    <div class="container border p-2 mb-2">
-        <p>{{ session.username }}: <span>  <a href="/logout">kirjaudu ulos</a></span></p>        
-    </div>
-{% else %}
-    <div class="container border p-2 mb-2">
-        <div class="row">
-            <div class="col-2">
-                <a href="/login">kirjaudu sisään</a> 
-            </div>
-            <div class="col">
-                <a href="/register">luo tunnus</a>
-            </div>
-        </div>       
-    </div>
-{% endif %}
-    <div class="container p-3 border shadow mb-5 bg-white rounded">
+    <div class="container p-3 border shadow bg-white rounded">
         <h5 class="text-center">Tapahtumat</h5>
         <table class="table table-striped">
             <thead>
