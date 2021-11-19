@@ -24,6 +24,9 @@
                         {% if event.username == session.username %}
                             <span style="color: grey;"> (sinä)</span>
                         {% endif %}
+                        {% if event.username == session.username or session.is_admin %}
+                            <span><a href={{ url_for("remove_event", id=event.id) }}>poista</a></span>
+                        {% endif %}                        
                     </td>
                 </tr>
                 {% endfor %}

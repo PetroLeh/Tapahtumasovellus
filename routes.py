@@ -44,5 +44,20 @@ def create_event():
     if request.method == "GET" and users.logged_in():
         return render_template("event_form.html")
     elif request.method == "POST" and users.logged_in():
+        user_id = users.logged_in()
+        start_time = request.form["start_time"]
+        end_time = request.form["end_time"]
+        description = request.form["description"]
+        info = request.form["info"]
+        if (events.create(user_id, start_time, end_time, description, info)):
+            return redirect("/")
+        else:
+            print("Tapahtuman lisäämisessä tapahtui virhe")
+    return redirect("/")
+
+@app.route("/remove/event/<int:id>")
+def remove_event(id):
+    if (users.logged_in() == events.get_user(id) or users.is_admin()):
+        events.remove(id)
         return redirect("/")
     return redirect("/")

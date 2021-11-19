@@ -32,4 +32,7 @@ def logout():
         del session["username"]
 
 def logged_in():
-    return session.get("user_id")
+    return session.get("user_id", 0)
+
+def is_admin() -> bool:
+    return session.get("is_admin")
