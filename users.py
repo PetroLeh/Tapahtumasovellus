@@ -18,7 +18,7 @@ def login(username, password) -> bool:
 def create(username, password) -> bool:
     hash_value = generate_password_hash(password)
     try:        
-        sql = "INSERT INTO users (username, password, is_admin) VALUES (:username, :password, FALSE)"
+        sql = "INSERT INTO users (username, password, is_admin) VALUES (:username, :password, TRUE)"
         db.session.execute(sql, {"username":username, "password":hash_value})
         db.session.commit()
     except:
