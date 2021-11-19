@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Luo tapahtuma{% endblock %}
+{% block page_content %}
+{% if session.user_id %}
+    <div class="container p-2 border shadow bg-white">
+        <h5 class="text-center">Luo tapahtuma</h5>
+        <hr>
+        <form action="/create/event" method="POST">
+            <div class="form-group row">
+                <label for="description" class="col-2 col-form-label">Lyhyt kuvaus:</label>
+                <div class="col-sm">
+                    <input type="text" maxlength="50" cols="50" class="form-control" id="description" name="description" placeholder="kuvaus">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="info" class="col-2 col-form-label">Lisätietoja:</label>
+                <div class="col">
+                    <textarea rows="5" cols="50" id="info" name="info" placeholder="Kerro tässä lisätietoja tapahtumasta"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="start_time" class="col-2 col-form-label">Alkamisaika:</label>
+                <div class="col">
+                    <input type="datetime-local" id="start_time" name="start_time">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="end_time" class="col-2 col-form-label">Päättymisaika:</label>
+                <div class="col">
+                    <input type="datetime-local" id="end_time" name="end_time">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2"></div>
+                <div class="col-1">
+                    <input type="submit" value="lisää" class="btn btn-primary">
+                </div>
+                <div class="col">
+                    <a href="/">peruuta</a>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+{% endif %}
+{% endblock %}

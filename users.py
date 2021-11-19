@@ -30,3 +30,6 @@ def logout():
         del session["is_admin"]
         del session["user_id"]
         del session["username"]
+
+def logged_in():
+    return session.get("user_id")

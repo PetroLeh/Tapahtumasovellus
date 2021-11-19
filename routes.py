@@ -38,3 +38,11 @@ def register():
 def logout():
     users.logout()
     return redirect("/")
+
+@app.route("/create/event", methods=["GET", "POST"])
+def create_event():
+    if request.method == "GET" and users.logged_in():
+        return render_template("event_form.html")
+    elif request.method == "POST" and users.logged_in():
+        return redirect("/")
+    return redirect("/")
