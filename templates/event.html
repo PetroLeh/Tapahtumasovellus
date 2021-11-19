@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Tapahtuma{% endblock %}
+{% block page_content %}
+<div class="container">
+<div class="card p-1 border shadow rounded" style="width: 40rem;">
+    <h5 class="card-header text-center">
+        {{ description }}
+    </h5>
+    <div class="card-body border rounded">
+        <p class="card-text">
+            {{ info }}
+        </p>
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            Alkaa: <b>{{ start_time }}</b>
+        </p>
+        <p class="card-text">
+            Päättyy: <b>{{ end_time }}</b>
+        </p>
+        <footer class="blockquote-footer">ilmoittaja: <span><a href="/">{{ username }}</a></span></footer>
+    </div>
+    <a href="/" class="btn btn-primary">palaa etusivulle</a>
+</div>
+</div>
+{% endblock %}

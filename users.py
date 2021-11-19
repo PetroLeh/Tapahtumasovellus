@@ -36,3 +36,9 @@ def logged_in():
 
 def is_admin() -> bool:
     return session.get("is_admin")
+
+def username(id):
+    sql = "SELECT username FROM users WHERE id=:id"
+    result = db.session.execute(sql, {"id":id})
+    username = result.fetchone()[0]
+    return username

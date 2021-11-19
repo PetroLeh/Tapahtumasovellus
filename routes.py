@@ -1,5 +1,6 @@
 from app import app
 from flask import render_template, redirect, request
+from datetime import date
 import users
 import events
 
@@ -61,3 +62,28 @@ def remove_event(id):
         events.remove(id)
         return redirect("/")
     return redirect("/")
+
+@app.route("/event/<int:id>")
+def event(id):
+    event = events.get(id)
+    return render_template("event.html", 
+                            id=id, 
+                            description=event.description, 
+                            info=event.info, 
+                            start_time=parse_time(event.start_time, "ei ilmoitettu"), 
+                            end_time=parse_time(event.end_time, "ei ilmoitettu"),
+                            username=users.username(event.user_id))
+
+def parse_time(value, value2):
+    if value:
+        days = {"Monday": "Maanantai",
+                "Tuesday": "Tiistai",
+                "Wednesday": "Keskiviikko",
+                "Thursday": "Torstai",
+                "Friday": "Perjantai",
+                "Saturday": "Lauantai",
+                "Sunday": "Sunnuntai"}
+        
+        day = days[value.strftime("%A")]
+        return day + value.strftime(" %d.%m.%Y  klo %H:%M")
+    return value2
