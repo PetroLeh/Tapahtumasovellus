@@ -42,3 +42,8 @@ def username(id):
     result = db.session.execute(sql, {"id":id})
     username = result.fetchone()[0]
     return username
+
+def exists(username):
+    sql = "SELECT id FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username":username})
+    return result.fetchone()

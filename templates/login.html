@@ -2,6 +2,9 @@
 {% block title %}Etusivu{% endblock %}
 {% block page_content %}
     <div class="container p-2 border bg-white shadow">
+        {% if message %}
+        <p style="color: red;"><b>{{ message }}</b></p>
+        {% endif %}
         <form action="/login" method="POST">
             <div class="row">
                 <div class="col-2">
@@ -18,6 +21,7 @@
                 <input type="password" class="form-control" name="password" placeholder="salasana" id="password">
             </div>
             <input type="submit" value="kirjaudu" class="btn btn-primary"/>
+            <a href="/" class="btn btn-primary ml-3">peruuta</a>
         </form>
     </div>
 {% endblock %}

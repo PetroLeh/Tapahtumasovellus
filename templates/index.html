@@ -1,7 +1,12 @@
 {% extends "layout.html" %}
 {% block title %}Etusivu{% endblock %}
 {% block page_content %}
-    <div class="container p-3 border shadow bg-white rounded">
+{% if message %}
+<div class="container p-1 border">
+    <p class="text-center" style="color: red;"><b>{{ message }}</b></p>
+</div>
+{% endif %}
+    <div class="container p-3 border shadow bg-white rounded">        
         <h5 class="text-center">Tapahtumat</h5>
         <table class="table table-striped">
             <thead>

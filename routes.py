@@ -18,7 +18,7 @@ def login():
         if users.login(username, password):
             return redirect("/")
         else:
-            return "kirjautuminen ei onnistunut"
+            return render_template("login.html", message="kirjautuminen ei onnistunut")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -29,11 +29,15 @@ def register():
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         if password1 != password2:
-            return "salasanat olivat erit"
+            return render_template("register.html", passwords_dont_match=True)
+        elif len(password1) < 5:
+            return render_template("register.html", password_too_short=True)
+        elif users.exists(username):
+            return render_template("register.html", username_exists=username)
         if users.create(username, password1):
             return redirect("/")
         else:
-            return "rekisteröinti ei onnistunut"
+            return render_template("index.html", eventlist=events.list(), message="Käyttäjätunnuksen luomisessa tapahtui odottamaton virhe")
 
 @app.route("/logout")
 def logout():

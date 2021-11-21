@@ -15,19 +15,29 @@
             <div class="form-group">
                 <label for="username">käyttäjätunnus:</label>
                 <input type="text" class="form-control" name="username" placeholder="tunnus" id="username" required>
+                {% if username_exists %}
+                <p style="color: red;"><b>Käyttäjätunnus '{{ username_exists }}' on varattu</b></p>
+                {% endif %}
                 <div class="invalid-feedback">Ei voi jättää tyhjäksi</div>
             </div>
             <div class="form-group">
                 <label for="password1">salasana:</label>
-                <input type="password" class="form-control" name="password1" placeholder="salasana" id="password1" required>
+                <input type="password" class="form-control" name="password1" placeholder="salasana (vähintään 5 merkkiä)" id="password1" required>
+                {% if password_too_short %}
+                <p style="color: red;"><b>Salasana on liian lyhyt</b></p>
+                {% endif %}
                 <div class="invalid-feedback">Ei voi jättää tyhjäksi</div>
             </div>
             <div class="form-group">
                 <label for="password2">salasana uudelleen:</label>
                 <input type="password" class="form-control" name="password2" placeholder="salasana uudelleen" id="password2" required>
+                {% if passwords_dont_match %}
+                <p style="color: red;"><b>Salasanat eivät vastaa toisiaan</b></p> 
+                {% endif %}
                 <div class="invalid-feedback">Ei voi jättää tyhjäksi</div>
             </div>
             <input type="submit" value="rekisteröi" class="btn btn-primary"/>
+            <a href="/" class="btn btn-primary ml-3">peruuta</a>
         </form>
     </div>
 {% endblock %}
