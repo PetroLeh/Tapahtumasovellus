@@ -3,14 +3,14 @@ from flask import session
 from db import db
 
 def login(username, password) -> bool:
-    sql = "select id, password, is_admin FROM users WHERE username = :username"
-    result = db.session.execute(sql, {"username":username})
+    sql = "select id, username, password, is_admin FROM users WHERE LOWER(username) = :username"
+    result = db.session.execute(sql, {"username":username.lower()})
     user = result.fetchone()
     if not user:
         return False
     if check_password_hash(user.password, password):
         session["user_id"] = user.id
-        session["username"] = username
+        session["username"] = user.username
         session["is_admin"] = user.is_admin
         return True
     return False
@@ -31,7 +31,7 @@ def logout():
         del session["user_id"]
         del session["username"]
 
-def logged_in():
+def logged_in() -> int:
     return session.get("user_id", 0)
 
 def is_admin() -> bool:
@@ -44,6 +44,6 @@ def username(id):
     return username
 
 def exists(username):
-    sql = "SELECT id FROM users WHERE username=:username"
-    result = db.session.execute(sql, {"username":username})
+    sql = "SELECT id FROM users WHERE LOWER(username)=:username"
+    result = db.session.execute(sql, {"username":username.lower()})
     return result.fetchone()
