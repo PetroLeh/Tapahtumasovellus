@@ -1,6 +1,18 @@
 # Tapahtumakalenteri
 ### Tietokantasovellus harjoitustyö - syksy 2021
 
+> ##### Sovellus Herokussa
+>
+> - Voit luoda sovelluksessa oman käyttäjätunnuksen
+> - Voit myös testata admin-tunnusta:
+>	käyttäjätunnus: admin
+>	salasana: salakana
+>
+>	Tosin tässä vaiheessa ei vielä ole paljon testattavaa...
+>
+> - linkki sovellukseen: <https://tsoha-tapahtumasovellus.herokuapp.com>
+
+
 Harjoitustyön aiheena on tapahtumakalenteri-sovellus. Sovellukseen voi lisätä tapahtumia ja selata niitä.
 Jokaisella tapahtumalla on kategoria (teatteriesitys, peli-ilta, siivoustalkoot jne.) ja tapahtuma-aika
 sekä -paikka. Tapahtuman voi määrittää julkiseksi tai yksityiseksi, jolloin se näkyy vain määrätyille käyttäjille.
