@@ -3,12 +3,14 @@
 
 > ##### Sovellus Herokussa
 >
-> - Voit luoda sovelluksessa oman käyttäjätunnuksen
-> - Voit myös testata admin-tunnusta:
->	käyttäjätunnus: admin
->	salasana: salakana
+> * Voit luoda sovelluksessa oman käyttäjätunnuksen
+> * Voit myös testata admin-tunnusta:
 >
->	Tosin tässä vaiheessa ei vielä ole paljon testattavaa...
+>> käyttäjätunnus: **admin**
+>>
+>> salasana: **salakana**
+>> 
+>> Tosin tässä vaiheessa ei vielä ole paljon testattavaa...
 >
 > - linkki sovellukseen: <https://tsoha-tapahtumasovellus.herokuapp.com>
 
