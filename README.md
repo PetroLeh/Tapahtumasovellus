@@ -12,7 +12,7 @@
 >> 
 >> Tosin tässä vaiheessa ei vielä ole paljon testattavaa...
 >
-> - linkki sovellukseen: <https://tsoha-tapahtumasovellus.herokuapp.com>
+> - linkki sovellukseen: <https://tsoha-tapahtumat.herokuapp.com>
 
 
 Harjoitustyön aiheena on tapahtumakalenteri-sovellus. Sovellukseen voi lisätä tapahtumia ja selata niitä.
