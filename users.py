@@ -3,7 +3,7 @@ from flask import session
 from db import db
 
 def login(username, password) -> bool:
-    sql = "select id, username, password, is_admin FROM users WHERE LOWER(username) = :username"
+    sql = "select id, username, password, is_admin FROM users WHERE LOWER(username)=:username"
     result = db.session.execute(sql, {"username":username.lower()})
     user = result.fetchone()
     if not user:
