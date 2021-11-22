@@ -19,7 +19,11 @@
             <tbody>
                 {% for event in eventlist %}
                 <tr>
-                    <td><a href={{ url_for("event", id=event.id) }}>{{ event.description }}</a></td>
+                    {% if not event.description %}
+                        <td><a href={{ url_for("event", id=event.id) }}>ei ilmoitettu</a></td>
+                    {% else %}
+                        <td><a href={{ url_for("event", id=event.id) }}>{{ event.description }}</a></td>
+                    {% endif %}
                     {% if not event.start_time %}
                         <td>ei ilmoitettu</td>
                     {% else %}
