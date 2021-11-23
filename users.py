@@ -47,3 +47,24 @@ def exists(username):
     sql = "SELECT id FROM users WHERE LOWER(username)=:username"
     result = db.session.execute(sql, {"username":username.lower()})
     return result.fetchone()
+
+def attend(event_id):
+    if not logged_in():
+        return False
+
+    user_id = logged_in()
+
+    if user_attending_to(user_id, event_id):
+        return False
+    try:
+        sql = "INSERT INTO attendances (user_id, event_id) VALUES (:user_id, :event_id)"
+        db.session.execute(sql, {"user_id":user_id, "event_id":event_id})
+        db.session.commit()      
+        return True
+    except:
+        return False
+
+def user_attending_to(user_id, event_id):
+    sql = "SELECT 1 FROM attendances WHERE user_id=:user_id AND event_id=:event_id"
+    result = db.session.execute(sql, {"user_id":user_id, "event_id":event_id})    
+    return result.fetchone()

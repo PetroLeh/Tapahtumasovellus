@@ -26,12 +26,13 @@
             </div>
         </div>
 
+        {% if session.user_id %}
         <div class ="col-6">
             <div class="card p-1 border shadow rounded" style="width: 35rem;">
- 
+                <a href={{ url_for("attend", id=id)}}>tulosta osallistujat</a>
             </div>
         </div>
-
+        {% endif %}
 
     </div>
 </div>

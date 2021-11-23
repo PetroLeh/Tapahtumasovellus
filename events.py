@@ -30,16 +30,19 @@ def remove(id):
 def create(user_id, start_time, end_time, description, info):
     if description is None or description.strip() == "":
         description = "ei kuvausta"
-
-    sql = "INSERT INTO events (user_id, created_at, start_time, end_time, description, info) " \
-        "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time,'')::TIMESTAMP, :description, :info)"
-    result = db.session.execute(sql,
-            {"user_id":user_id,
-            "start_time":start_time,
-            "end_time":end_time,
-            "description":description,
-            "info":info})
-    db.session.commit()
+    try:
+        sql = "INSERT INTO events (user_id, created_at, start_time, end_time, description, info) " \
+            "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time,'')::TIMESTAMP, :description, :info)"
+        result = db.session.execute(sql,
+                {"user_id":user_id,
+                "start_time":start_time,
+                "end_time":end_time,
+                "description":description,
+                "info":info})
+        db.session.commit()
+    except:
+        return False
+    return True
 
 def get(id):
     sql = "SELECT user_id, created_at, start_time, end_time, description, info FROM events WHERE id=:id"
@@ -49,7 +52,8 @@ def get(id):
     return event
 
 def attendances(id):
-    sql = "SELECT u.user_id AS user_id, u.username AS username " \
+    sql = "SELECT u.id AS user_id, u.username AS username " \
         "FROM users u, attendances a WHERE u.id = a.user_id AND a.event_id=:event_id"
-    result = db.session.execute(sql, {"event_id":event_id})
-    return result
+    result = db.session.execute(sql, {"event_id":id})
+    attendances = result.fetchall()
+    return attendances

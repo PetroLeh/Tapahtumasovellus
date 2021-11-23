@@ -79,6 +79,11 @@ def event(id):
                             username=users.username(event.user_id),
                             created_at=parse_time(event.created_at))
 
+@app.route("/event/<int:id>/attend")
+def attend(id):
+    users.attend(id)
+    return redirect("/event/" + str(id))
+
 def parse_time(value, value2 = ""):
     if value:
         days = {"Monday": "Maanantai",
