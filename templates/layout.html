@@ -21,7 +21,19 @@
             <hr>
         {% endif %}
         {% if session.user_id %}
-        <div class="container border p-2 mb-2 bg-white">
+        <nav class="navbar sticky-top navbar-expand-lg navbar-light mb-3" style="background-color: rgb(200, 180, 240);">
+            <a class="navbar-brand" href="/">Tapahtumat</a>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href={{ url_for("user", id=session.user_id) }}>
+                        {{ session.username }}
+                    </a> 
+                </li>             
+                <li class="nav-item"><a class="nav-link" href="/event">luo tapahtuma</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">kirjaudu ulos</a></li>
+            </ul>
+        </nav>
+<!--        <div class="container border p-2 mb-2 bg-white">
             <div class="row">
                 <div class="col-3">
                     <p>{{ session.username }}: <span>  <a href="/logout">kirjaudu ulos</a></span></p>
@@ -30,18 +42,27 @@
                     <a href="/event">luo tapahtuma</a>
                 </div>
             </div>                
-        </div>
-        {% else %}
-        <div class="container border p-2 mb-2 bg-white">
-            <div class="row">             
+        </div> 
+-->
+        {% else %}        
+            <nav class="navbar sticky-top navbar-expand-md navbar-light mb-3" style="background-color: rgb(205, 195, 220);">
+                <a class="navbar-brand" href="/">Tapahtumat</a>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="/login">kirjaudu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register">luo tunnus</a></li>
+                </ul>
+            </nav>
+<!--        <div class="container border p-2 mb-2 bg-white">
+        <div class="row">             
                 <div class="col-2">
                     <a href="/login">kirjaudu sisään</a> 
                 </div>
                 <div class="col">
                     <a href="/register">luo tunnus</a>
                 </div>
-            </div>       
+            </div>     
         </div>
+-->   
         {% endif %}
         {% block page_content %}
         {% endblock %}
