@@ -76,9 +76,10 @@ def event(id):
                             info=event.info, 
                             start_time=parse_time(event.start_time, "ei ilmoitettu"), 
                             end_time=parse_time(event.end_time, "ei ilmoitettu"),
-                            username=users.username(event.user_id))
+                            username=users.username(event.user_id),
+                            created_at=parse_time(event.created_at))
 
-def parse_time(value, value2):
+def parse_time(value, value2 = ""):
     if value:
         days = {"Monday": "Maanantai",
                 "Tuesday": "Tiistai",

@@ -1,8 +1,9 @@
 from db import db
 
 class Event:
-    def __init__(self, user_id, start_time, end_time, description, info):
+    def __init__(self, user_id, created_at, start_time, end_time, description, info):
         self.user_id = user_id
+        self.created_at = created_at
         self.start_time = start_time
         self.end_time = end_time
         self.description = description
@@ -30,8 +31,8 @@ def create(user_id, start_time, end_time, description, info):
     if description is None or description.strip() == "":
         description = "ei kuvausta"
 
-    sql = "INSERT INTO events (user_id, start_time, end_time, description, info) " \
-        "VALUES (:user_id, NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time,'')::TIMESTAMP, :description, :info)"
+    sql = "INSERT INTO events (user_id, created_at, start_time, end_time, description, info) " \
+        "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time,'')::TIMESTAMP, :description, :info)"
     result = db.session.execute(sql,
             {"user_id":user_id,
             "start_time":start_time,
@@ -41,8 +42,14 @@ def create(user_id, start_time, end_time, description, info):
     db.session.commit()
 
 def get(id):
-    sql = "SELECT user_id, start_time, end_time, description, info FROM events WHERE id=:id"
+    sql = "SELECT user_id, created_at, start_time, end_time, description, info FROM events WHERE id=:id"
     result = db.session.execute(sql, {"id":id})
     data = result.fetchone()
-    event = Event(data.user_id, data.start_time, data.end_time, data.description, data.info)
+    event = Event(data.user_id, data.created_at, data.start_time, data.end_time, data.description, data.info)
     return event
+
+def attendances(id):
+    sql = "SELECT u.user_id AS user_id, u.username AS username " \
+        "FROM users u, attendances a WHERE u.id = a.user_id AND a.event_id=:event_id"
+    result = db.session.execute(sql, {"event_id":event_id})
+    return result
