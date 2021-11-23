@@ -44,7 +44,7 @@ def logout():
     users.logout()
     return redirect("/")
 
-@app.route("/create/event", methods=["GET", "POST"])
+@app.route("/event", methods=["GET", "POST"])
 def create_event():
     if request.method == "GET" and users.logged_in():
         return render_template("event_form.html")
@@ -60,7 +60,7 @@ def create_event():
             print("Tapahtuman lisäämisessä tapahtui virhe")
     return redirect("/")
 
-@app.route("/remove/event/<int:id>")
+@app.route("/event/<int:id>/remove")
 def remove_event(id):
     if (users.logged_in() == events.get_user(id) or users.is_admin()):
         events.remove(id)
