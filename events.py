@@ -27,18 +27,18 @@ def remove(id):
     result = db.session.execute(sql, {"id":id})
     db.session.commit()
 
-def create(user_id, start_time, end_time, description, info):
-    if description is None or description.strip() == "":
-        description = "ei kuvausta"
+def create(event):
+    if event.description is None or event.description.strip() == "":
+        event.description = "ei kuvausta"
     try:
         sql = "INSERT INTO events (user_id, created_at, start_time, end_time, description, info) " \
-            "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time,'')::TIMESTAMP, :description, :info)"
+            "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time, '')::TIMESTAMP, :description, :info)"
         result = db.session.execute(sql,
-                {"user_id":user_id,
-                "start_time":start_time,
-                "end_time":end_time,
-                "description":description,
-                "info":info})
+                {"user_id":event.user_id,
+                "start_time":event.start_time,
+                "end_time":event.end_time,
+                "description":event.description,
+                "info":event.info})
         db.session.commit()
     except:
         return False
@@ -57,3 +57,22 @@ def attendances(id):
     result = db.session.execute(sql, {"event_id":id})
     attendances = result.fetchall()
     return attendances
+
+def duplicates(event):
+    # I had to do this with if - else. I tried NULLIF with different variations on this
+    # but didn't just get it work on timestamps with null and not-null values.
+    if event.start_time:
+        sql = "SELECT user_id, created_at, start_time, description " \
+            "FROM events WHERE user_id=:user_id AND description=:description AND " \
+            "start_time=:start_time"
+    else:
+        sql = "SELECT user_id, created_at, start_time, description " \
+            "FROM events WHERE user_id=:user_id AND description=:description AND " \
+            "start_time IS NULL"    
+
+    result = db.session.execute(sql, {"user_id":event.user_id,
+                                      "start_time":event.start_time,
+                                      "description":event.description})
+    duplicates = result.fetchall()
+    print("(tulostus metodista) duplicates: ", duplicates)
+    return duplicates

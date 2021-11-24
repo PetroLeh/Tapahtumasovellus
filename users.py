@@ -73,21 +73,21 @@ def user_id_exists(id):
 
 def attend_event(event_id):
     if not logged_in():
-        return False
-
+        return
     user_id = logged_in()
 
     if user_attending_to(user_id, event_id):
-        return False
-    try:
+        sql = "DELETE FROM attendances WHERE user_id=:user_id AND event_id=:event_id"
+        db.session.execute(sql, {"user_id":user_id, "event_id":event_id})
+        db.session.commit()   
+    else:
         sql = "INSERT INTO attendances (user_id, event_id) VALUES (:user_id, :event_id)"
         db.session.execute(sql, {"user_id":user_id, "event_id":event_id})
-        db.session.commit()      
-        return True
-    except:
-        return False
+        db.session.commit()
 
 def user_attending_to(user_id, event_id):
+    if not user_id or not event_id:
+        return False
     sql = "SELECT 1 FROM attendances WHERE user_id=:user_id AND event_id=:event_id"
     result = db.session.execute(sql, {"user_id":user_id, "event_id":event_id})    
     return result.fetchone()

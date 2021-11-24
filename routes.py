@@ -49,22 +49,25 @@ def create_event():
     if request.method == "GET" and users.logged_in():
         return render_template("event_form.html")
     elif request.method == "POST" and users.logged_in():
-        user_id = users.logged_in()
-        start_time = request.form["start_time"]
-        end_time = request.form["end_time"]
-        description = request.form["description"]
-        info = request.form["info"]
-        if (events.create(user_id, start_time, end_time, description, info)):
+        event = events.Event(users.logged_in(),
+                            None,                          # event.created_at is set to None here.
+                            request.form["start_time"],    # Correct timestamp will be set in 
+                            request.form["end_time"],      # SQL-statement in events.create() method.
+                            request.form["description"],
+                            request.form["info"])
+        if events.duplicates(event):
+            print("ruplikaatti! Jiihaa!")
+            return redirect("/")
+        if (events.create(event)):
             return redirect("/")
         else:
-            print("Tapahtuman lisäämisessä tapahtui virhe")
+            return render_template("error.html", message="virhe tapahtuman lisäämisessä")
     return redirect("/")
 
 @app.route("/event/<int:id>/remove")
 def remove_event(id):
     if (users.logged_in() == events.get_user(id) or users.is_admin()):
         events.remove(id)
-        return redirect("/")
     return redirect("/")
 
 @app.route("/event/<int:id>")
@@ -77,14 +80,14 @@ def event(id):
     return render_template("event.html",
                             id=id,
                             username=users.username(event.user_id),
-                            event=event)
+                            event=event,
+                            is_attending=users.user_attending_to(users.logged_in(), id))
 
 @app.route("/event/<int:id>/attend")
 def attend_event(id):
-    if users.attend_event(id):
-        print("Jiihaa!")
-        return redirect("/event/" + str(id))
-    return redirect("/")
+    users.attend_event(id)
+    return redirect("/event/" + str(id))
+
 
 @app.route("/user/<int:id>")
 def user(id):
