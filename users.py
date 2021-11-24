@@ -1,6 +1,26 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import session
 from db import db
+import groups, friends
+
+def get_data(id):
+    if logged_in():
+        if id == logged_in() or is_admin():
+            data = {"username": username(id),
+                    "groups": groups.get_groups_of_user(id),
+                    "friends": friends.get_friends(id),
+                    "attendances": [],
+                    "invitations": [],
+                    "messages": [],
+                    "rights_to_modify": True
+                    }
+        else:
+            data = {"username": username(id),
+                    "groups": groups.get_groups_of_user(id),
+                    "friends": friends.get_friends(id)
+                    }
+        return data
+    return null
 
 def login(username, password) -> bool:
     sql = "select id, username, password, is_admin FROM users WHERE LOWER(username)=:username"
@@ -43,12 +63,15 @@ def username(id):
     username = result.fetchone()[0]
     return username
 
-def exists(username):
+def username_exists(username):
     sql = "SELECT id FROM users WHERE LOWER(username)=:username"
     result = db.session.execute(sql, {"username":username.lower()})
     return result.fetchone()
 
-def attend(event_id):
+def user_id_exists(id):
+    return True
+
+def attend_event(event_id):
     if not logged_in():
         return False
 

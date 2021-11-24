@@ -6,21 +6,24 @@
         <div class ="col-6">
             <div class="card p-1 border shadow rounded" style="width: 35rem;">
                 <h5 class="card-header text-center">
-                    {{ description }}
+                    {{ event.description }}
                 </h5>
                 <div class="card-body border rounded">
                     <p class="card-text">
-                        {{ info }}
+                        {{ event.info }}
                     </p>
                 </div>
                 <div class="card-body">
                     <p class="card-text">
-                        Alkaa: <b>{{ start_time }}</b>
+                        Alkaa: <b>{{ event.start_time }}</b>
                     </p>
                     <p class="card-text">
-                        Päättyy: <b>{{ end_time }}</b>
+                        Päättyy: <b>{{ event.end_time }}</b>
                     </p>
-                    <footer class="blockquote-footer">ilmoitus luotu {{ created_at }},  ilmoittaja: <span><a href="/">{{ username }}</a></span></footer>
+                    <footer class="blockquote-footer">ilmoitus luotu {{ event.created_at }},  ilmoittaja: <span>
+                        {% if session.user_id %}<a href={{ url_for("user", id=event.user_id) }}>{{ username }}</a></span>
+                        {% else %}{{ event.username }}</span>
+                        {% endif %}</footer>
                 </div>
                 <a href="/" class="btn btn-primary">palaa etusivulle</a>
             </div>
@@ -29,7 +32,7 @@
         {% if session.user_id %}
         <div class ="col-6">
             <div class="card p-1 border shadow rounded" style="width: 35rem;">
-                <a href={{ url_for("attend", id=id)}}>tulosta osallistujat</a>
+                <a href={{ url_for("attend_event", id=id)}}>osallistu</a>
             </div>
         </div>
         {% endif %}

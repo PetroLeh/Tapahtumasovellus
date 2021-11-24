@@ -1,12 +1,12 @@
 from app import app
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, flash
 from datetime import date
-import users
-import events
+import users, events
+
 
 @app.route("/")
 def index():
-        return render_template("index.html", eventlist=events.list())
+    return render_template("index.html", eventlist=events.list())
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -32,7 +32,7 @@ def register():
             return render_template("register.html", passwords_dont_match=True)
         elif len(password1) < 5:
             return render_template("register.html", password_too_short=True)
-        elif users.exists(username):
+        elif users.username_exists(username):
             return render_template("register.html", username_exists=username)
         if users.create(username, password1):
             return redirect("/")
@@ -70,23 +70,28 @@ def remove_event(id):
 @app.route("/event/<int:id>")
 def event(id):
     event = events.get(id)
-    return render_template("event.html", 
-                            id=id, 
-                            description=event.description, 
-                            info=event.info, 
-                            start_time=parse_time(event.start_time, "ei ilmoitettu"), 
-                            end_time=parse_time(event.end_time, "ei ilmoitettu"),
+    event.start_time = parse_time(event.start_time, "ei ilmoitettu")
+    event.end_time = parse_time(event.end_time, "ei ilmoitettu")
+    event.created_at = parse_time(event.created_at)
+
+    return render_template("event.html",
+                            id=id,
                             username=users.username(event.user_id),
-                            created_at=parse_time(event.created_at))
+                            event=event)
 
 @app.route("/event/<int:id>/attend")
-def attend(id):
-    users.attend(id)
-    return redirect("/event/" + str(id))
+def attend_event(id):
+    if users.attend_event(id):
+        print("Jiihaa!")
+        return redirect("/event/" + str(id))
+    return redirect("/")
 
 @app.route("/user/<int:id>")
 def user(id):
-    print(users.username(id))
+    user_data = users.get_data(id)
+    if user_data:
+        return render_template("user.html", 
+                                user=user_data)
     return redirect("/")
 
 def parse_time(value, value2 = ""):
