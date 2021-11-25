@@ -1,5 +1,7 @@
 from db import db
 
+temp = None
+
 class Event:
     def __init__(self, user_id, created_at, start_time, end_time, description, info):
         self.user_id = user_id
@@ -28,6 +30,9 @@ def remove(id):
     db.session.commit()
 
 def create(event):
+    if not event:
+        print("dippadui ei eventtiä")
+        return False    
     if event.description is None or event.description.strip() == "":
         event.description = "ei kuvausta"
     try:
@@ -41,6 +46,7 @@ def create(event):
                 "info":event.info})
         db.session.commit()
     except:
+        print("VIIIIIRHEEEE")
         return False
     return True
 
@@ -59,14 +65,15 @@ def attendances(id):
     return attendances
 
 def duplicates(event):
-    # I had to do this with if - else. I tried NULLIF with different variations on this
-    # but didn't just get it work on timestamps with null and not-null values.
+
+    # I had to do this with if - else, for now anyway. I tried NULLIF with different variations
+    # on this but just didn't get it work on both cases, timestamps with null and not-null values.
     if event.start_time:
-        sql = "SELECT user_id, created_at, start_time, description " \
+        sql = "SELECT * " \
             "FROM events WHERE user_id=:user_id AND description=:description AND " \
             "start_time=:start_time"
     else:
-        sql = "SELECT user_id, created_at, start_time, description " \
+        sql = "SELECT * " \
             "FROM events WHERE user_id=:user_id AND description=:description AND " \
             "start_time IS NULL"    
 

@@ -3,6 +3,22 @@ from flask import render_template, redirect, request, flash
 from datetime import date
 import users, events
 
+def parse_time(value, value2 = ""):
+    if value:
+        days = {"Monday": "Maanantai",
+                "Tuesday": "Tiistai",
+                "Wednesday": "Keskiviikko",
+                "Thursday": "Torstai",
+                "Friday": "Perjantai",
+                "Saturday": "Lauantai",
+                "Sunday": "Sunnuntai"}
+        
+        day = days[value.strftime("%A")]
+        return day + value.strftime(" %d.%m.%Y  klo %H:%M")
+    return value2
+
+def logged_in():
+    return users.logged_in()
 
 @app.route("/")
 def index():
@@ -46,27 +62,38 @@ def logout():
 
 @app.route("/event", methods=["GET", "POST"])
 def create_event():
-    if request.method == "GET" and users.logged_in():
+    if request.method == "GET" and logged_in():
         return render_template("event_form.html")
-    elif request.method == "POST" and users.logged_in():
+    elif request.method == "POST" and logged_in():
         event = events.Event(users.logged_in(),
-                            None,                          # event.created_at is set to None here.
+                            None,                          # 'event.created_at' is set to None here.
                             request.form["start_time"],    # Correct timestamp will be set in 
                             request.form["end_time"],      # SQL-statement in events.create() method.
                             request.form["description"],
                             request.form["info"])
-        if events.duplicates(event):
-            print("ruplikaatti! Jiihaa!")
-            return redirect("/")
-        if (events.create(event)):
-            return redirect("/")
-        else:
+        duplicates = events.duplicates(event)
+        if duplicates:
+            events.temp = event
+            return render_template("event_form.html", 
+                                    count=len(duplicates),
+                                    duplicates=duplicates,
+                                    event=event,
+                                    start_time=parse_time(duplicates[0].start_time, "ei ilmoitettu"))
+        if not events.create(event):
             return render_template("error.html", message="virhe tapahtuman lisäämisessä")
+    return redirect("/")
+
+@app.route("/event/duplicate")
+def handle_duplicate():
+    if not events.create(events.temp):
+        events.temp = None
+        return render_template("error.html", message="virhe tapahtuman lisäämisessä")
+    events.temp = None
     return redirect("/")
 
 @app.route("/event/<int:id>/remove")
 def remove_event(id):
-    if (users.logged_in() == events.get_user(id) or users.is_admin()):
+    if (logged_in() == events.get_user(id) or users.is_admin()):
         events.remove(id)
     return redirect("/")
 
@@ -81,7 +108,7 @@ def event(id):
                             id=id,
                             username=users.username(event.user_id),
                             event=event,
-                            is_attending=users.user_attending_to(users.logged_in(), id))
+                            is_attending=users.user_attending_to(logged_in(), id))
 
 @app.route("/event/<int:id>/attend")
 def attend_event(id):
@@ -97,16 +124,14 @@ def user(id):
                                 user=user_data)
     return redirect("/")
 
-def parse_time(value, value2 = ""):
-    if value:
-        days = {"Monday": "Maanantai",
-                "Tuesday": "Tiistai",
-                "Wednesday": "Keskiviikko",
-                "Thursday": "Torstai",
-                "Friday": "Perjantai",
-                "Saturday": "Lauantai",
-                "Sunday": "Sunnuntai"}
-        
-        day = days[value.strftime("%A")]
-        return day + value.strftime(" %d.%m.%Y  klo %H:%M")
-    return value2
+@app.route("/friends")
+def friends():
+    if logged_in():
+        return render_template("friends.html")
+    return redirect("/")
+
+@app.route("/groups")
+def groups():
+    if logged_in():
+        return render_template("groups.html")
+    return redirect("/")
