@@ -70,16 +70,16 @@ def duplicates(event):
     # on this but just didn't get it work on both cases, timestamps with null and not-null values.
     if event.start_time:
         sql = "SELECT * " \
-            "FROM events WHERE user_id=:user_id AND description=:description AND " \
+            "FROM events WHERE user_id=:user_id AND LOWER(description)=:description AND " \
             "start_time=:start_time"
     else:
         sql = "SELECT * " \
-            "FROM events WHERE user_id=:user_id AND description=:description AND " \
+            "FROM events WHERE user_id=:user_id AND LOWER(description)=:description AND " \
             "start_time IS NULL"    
 
     result = db.session.execute(sql, {"user_id":event.user_id,
                                       "start_time":event.start_time,
-                                      "description":event.description})
+                                      "description":event.description.lower()})
     duplicates = result.fetchall()
     print("(tulostus metodista) duplicates: ", duplicates)
     return duplicates
