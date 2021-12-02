@@ -37,7 +37,9 @@ def username_exists(username):
     return result.fetchone()
 
 def user_id_exists(id):
-    return True
+    sql = "SELECT 1 FROM users WHERE id=:id"
+    result = db.session.execute(sql, {"id":id})
+    return result.fetchone()
 
 def attend_event(user_id, event_id):
     if user_attending_to(user_id, event_id):

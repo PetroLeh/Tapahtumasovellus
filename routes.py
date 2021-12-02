@@ -126,17 +126,28 @@ def attend_event(id):
 ########        users personal page
 @app.route("/user/<int:id>")
 def user(id):
+    if not users.user_id_exists(id):
+        return redirect("/")
     user_data = users.get_data(id)
     if user_data:
         return render_template("user.html", 
-                                user=user_data)
+                                user=user_data,
+                                friend=friends.is_friend(logged_in(), id))
     return redirect("/")
 
 ########        friends
 @app.route("/friends")
-def friends():
+def friends_page():
     if logged_in():
         return render_template("friends.html")
+    return redirect("/")
+
+@app.route("/friends/add/<int:id>")
+def add_friend(id):
+    if logged_in():
+        if friends.add_friend(logged_in(), id):
+            return redirect("/user/" + str(id))
+        return render_template("error.html", message="Virhe ystävän lisäämisessä")
     return redirect("/")
 
 ########    groups

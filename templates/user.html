@@ -2,28 +2,54 @@
 {% if session.username %}
 {% block title %}{{ user.username }}{% endblock %}
 {% block page_content %}
-<div class="row">
-    <div class="col">
-        <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
-            <p>{{ user }}</p>
-        </div>
-    </div>
-    <div class="col">
-        <div class="container bg-light mt-2 ml-2 p-3 shadow">
-            <p>{{ user }}</p>
-        </div>
-    </div>
-</div>
+
 {% if user.rights_to_modify %}
 <div class="row">
     <div class="col">
-        <div class="container bg-light mt-2 ml-2 p-3 shadow">
-            <p>{{ user }}</p>
+        <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
+            <h5 class="text-center">käyttäjätiedot</h5>
+            <hr>
+            <p>käyttäjänimi: <b>{{ user.username }}</b></p>
+            {% if not friend and session.user_id != user.id %}
+                <a href={{ url_for("add_friend", id=user.id)}}>lisää ystäväksi</a>
+            {% endif %}
         </div>
     </div>
     <div class="col">
-        <div class="container bg-white mt-2 ml-2 p-3 shadow">
-            <p>{{ user }}</p>
+        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
+            <h5 class="text-center">ystävät</h5>
+            <hr>
+            {% for friend in user.friends %}
+                <a href={{ url_for("user", id=friend.id)}}>{{ friend.username }}</a><br>
+            {% endfor %}
+            <hr>
+            <h5 class="text-center">ystäväkutsut</h5>
+            <hr>
+            {% for invitation in user.friend_invitations %}
+            <a href={{ url_for("user", id=invitation.id)}}>{{ invitation.username }}</a>               
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col">
+        <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
+            <h5 class="text-center">käyttäjätiedot</h5>
+            <hr>
+            <p>käyttäjänimi: <b>{{ user.username }}</b></p>
+            {% if not friend %}
+                <a href={{ url_for("add_friend", id=user.id)}}>lisää ystäväksi</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col">
+        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
+            <h5 class="text-center">ystävät</h5>
+            <hr>
+            {% for friend in user.friends %}
+                <a href={{ url_for("user", id=friend.id)}}>{{ friend.username }}</a><br>
+            {% endfor %}
         </div>
     </div>
 </div>
