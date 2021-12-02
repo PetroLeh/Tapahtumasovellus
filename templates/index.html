@@ -6,7 +6,7 @@
     <p class="text-center" style="color: red;"><b>{{ message }}</b></p>
 </div>
 {% endif %}
-    <div class="container p-3 border shadow bg-white rounded">        
+    <div class="container p-3 border shadow bg-white rounded" style="max-height: 600px; overflow-y: scroll;">        
         <h5 class="text-center">Tapahtumat</h5>
         <table class="table table-striped">
             <thead>
@@ -41,7 +41,5 @@
                 {% endfor %}
             </tbody>
         </table>
-<!--    <iframe width="425" height="350" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-8.876953125000002%2C57.326521225217064%2C47.28515625000001%2C70.61261423801925&amp;layer=mapnik" style="border: 1px solid black"></iframe>
--->
     </div>
 {% endblock %}

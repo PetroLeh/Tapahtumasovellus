@@ -1,7 +1,5 @@
 from db import db
 
-temp = None
-
 class Event:
     def __init__(self, user_id, created_at, start_time, end_time, description, info):
         self.user_id = user_id
@@ -11,7 +9,7 @@ class Event:
         self.description = description
         self.info = info
 
-def list():
+def list_all():
     sql = "SELECT e.id AS id, COALESCE(e.description, 'ei kuvausta') AS description, e.start_time AS start_time, u.username AS username FROM events e, users u " \
         "WHERE e.user_id = u.id ORDER BY e.id"
     result = db.session.execute(sql)
@@ -31,7 +29,6 @@ def remove(id):
 
 def create(event):
     if not event:
-        print("dippadui ei eventtiä")
         return False    
     if event.description is None or event.description.strip() == "":
         event.description = "ei kuvausta"
@@ -46,7 +43,6 @@ def create(event):
                 "info":event.info})
         db.session.commit()
     except:
-        print("VIIIIIRHEEEE")
         return False
     return True
 
@@ -81,5 +77,4 @@ def duplicates(event):
                                       "start_time":event.start_time,
                                       "description":event.description.lower()})
     duplicates = result.fetchall()
-    print("(tulostus metodista) duplicates: ", duplicates)
     return duplicates

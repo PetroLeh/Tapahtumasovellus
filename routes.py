@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, redirect, request, flash
 from datetime import date
-import users, events
+from service_config import Event, events, users, friends, groups
 
 def parse_time(value, value2 = ""):
     if value:
@@ -20,10 +20,14 @@ def parse_time(value, value2 = ""):
 def logged_in():
     return users.logged_in()
 
+########        routes:
+
+########        main page
 @app.route("/")
 def index():
-    return render_template("index.html", eventlist=events.list())
+    return render_template("index.html", eventlist=events.list_all())
 
+########        login/logout
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -36,6 +40,13 @@ def login():
         else:
             return render_template("login.html", message="kirjautuminen ei onnistunut")
 
+@app.route("/logout")
+def logout():
+    users.logout()
+    return redirect("/")
+
+
+########        register new user
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
@@ -55,25 +66,21 @@ def register():
         else:
             return render_template("index.html", eventlist=events.list(), message="Käyttäjätunnuksen luomisessa tapahtui odottamaton virhe")
 
-@app.route("/logout")
-def logout():
-    users.logout()
-    return redirect("/")
-
+########        events
 @app.route("/event", methods=["GET", "POST"])
 def create_event():
     if request.method == "GET" and logged_in():
         return render_template("event_form.html")
     elif request.method == "POST" and logged_in():
-        event = events.Event(users.logged_in(),
-                            None,                          # 'event.created_at' is set to None here.
-                            request.form["start_time"],    # Correct timestamp will be set in 
-                            request.form["end_time"],      # SQL-statement in events.create() method.
-                            request.form["description"],
-                            request.form["info"])
+        event = Event(users.logged_in(),
+                        None,                          # 'event.created_at' is set to None here.
+                        request.form["start_time"],    # Correct timestamp will be set in 
+                        request.form["end_time"],      # create() method in event_db_dao.
+                        request.form["description"],
+                        request.form["info"])
         duplicates = events.duplicates(event)
         if duplicates:
-            events.temp = event
+            events.temp_event = event
             return render_template("event_form.html", 
                                     count=len(duplicates),
                                     duplicates=duplicates,
@@ -85,10 +92,10 @@ def create_event():
 
 @app.route("/event/duplicate")
 def handle_duplicate():
-    if not events.create(events.temp):
-        events.temp = None
+    if not events.create(events.temp_event):
+        events.temp_event = None
         return render_template("error.html", message="virhe tapahtuman lisäämisessä")
-    events.temp = None
+    events.temp_event = None
     return redirect("/")
 
 @app.route("/event/<int:id>/remove")
@@ -116,6 +123,7 @@ def attend_event(id):
     return redirect("/event/" + str(id))
 
 
+########        users personal page
 @app.route("/user/<int:id>")
 def user(id):
     user_data = users.get_data(id)
@@ -124,12 +132,14 @@ def user(id):
                                 user=user_data)
     return redirect("/")
 
+########        friends
 @app.route("/friends")
 def friends():
     if logged_in():
         return render_template("friends.html")
     return redirect("/")
 
+########    groups
 @app.route("/groups")
 def groups():
     if logged_in():

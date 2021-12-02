@@ -2,7 +2,32 @@
 {% if session.username %}
 {% block title %}{{ user.username }}{% endblock %}
 {% block page_content %}
-{{ user.username }}
-saat muokata: {{ user.rights_to_modify }}
+<div class="row">
+    <div class="col">
+        <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
+            <p>{{ user }}</p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="container bg-light mt-2 ml-2 p-3 shadow">
+            <p>{{ user }}</p>
+        </div>
+    </div>
+</div>
+{% if user.rights_to_modify %}
+<div class="row">
+    <div class="col">
+        <div class="container bg-light mt-2 ml-2 p-3 shadow">
+            <p>{{ user }}</p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="container bg-white mt-2 ml-2 p-3 shadow">
+            <p>{{ user }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
 {% endif %}

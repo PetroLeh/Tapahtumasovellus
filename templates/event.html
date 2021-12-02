@@ -22,7 +22,7 @@
                     </p>
                     <footer class="blockquote-footer">ilmoitus luotu {{ event.created_at }},  ilmoittaja: <span>
                         {% if session.user_id %}<a href={{ url_for("user", id=event.user_id) }}>{{ username }}</a></span>
-                        {% else %}{{ event.username }}</span>
+                        {% else %}{{ username }}</span>
                         {% endif %}</footer>
                 </div>
                 <a href="/" class="btn btn-primary">palaa etusivulle</a>

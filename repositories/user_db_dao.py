@@ -1,26 +1,6 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import session
 from db import db
-import groups, friends
-
-def get_data(id):
-    if logged_in():
-        if id == logged_in() or is_admin():
-            data = {"username": username(id),
-                    "groups": groups.get_groups_of_user(id),
-                    "friends": friends.get_friends(id),
-                    "attendances": [],
-                    "invitations": [],
-                    "messages": [],
-                    "rights_to_modify": True
-                    }
-        else:
-            data = {"username": username(id),
-                    "groups": groups.get_groups_of_user(id),
-                    "friends": friends.get_friends(id)
-                    }
-        return data
-    return null
 
 def login(username, password) -> bool:
     sql = "select id, username, password, is_admin FROM users WHERE LOWER(username)=:username"
@@ -45,18 +25,6 @@ def create(username, password) -> bool:
         return False
     return login(username, password)
 
-def logout():
-    if session.get("user_id"):
-        del session["is_admin"]
-        del session["user_id"]
-        del session["username"]
-
-def logged_in() -> int:
-    return session.get("user_id", 0)
-
-def is_admin() -> bool:
-    return session.get("is_admin")
-
 def username(id):
     sql = "SELECT username FROM users WHERE id=:id"
     result = db.session.execute(sql, {"id":id})
@@ -71,11 +39,7 @@ def username_exists(username):
 def user_id_exists(id):
     return True
 
-def attend_event(event_id):
-    if not logged_in():
-        return
-    user_id = logged_in()
-
+def attend_event(user_id, event_id):
     if user_attending_to(user_id, event_id):
         sql = "DELETE FROM attendances WHERE user_id=:user_id AND event_id=:event_id"
         db.session.execute(sql, {"user_id":user_id, "event_id":event_id})
