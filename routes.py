@@ -1,9 +1,9 @@
+from flask import render_template, redirect, request
+
 from app import app
-from flask import render_template, redirect, request, flash
-from datetime import date
 from service_config import Event, events, users, friends, groups
 
-def parse_time(value, value2 = ""):
+def parse_time(value, value2=""):
     if value:
         days = {"Monday": "Maanantai",
                 "Tuesday": "Tiistai",
@@ -12,7 +12,6 @@ def parse_time(value, value2 = ""):
                 "Friday": "Perjantai",
                 "Saturday": "Lauantai",
                 "Sunday": "Sunnuntai"}
-        
         day = days[value.strftime("%A")]
         return day + value.strftime(" %d.%m.%Y  klo %H:%M")
     return value2
@@ -32,13 +31,13 @@ def index():
 def login():
     if request.method == "GET":
         return render_template("login.html")
-    elif request.method == "POST":    
+    if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         if users.login(username, password):
             return redirect("/")
-        else:
-            return render_template("login.html", message="kirjautuminen ei onnistunut")
+        return render_template("login.html", message="kirjautuminen ei onnistunut")
+    return redirect("/")
 
 @app.route("/logout")
 def logout():
@@ -51,41 +50,43 @@ def logout():
 def register():
     if request.method == "GET":
         return render_template("register.html")
-    elif request.method == "POST":
+    if request.method == "POST":
         username = request.form["username"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         if password1 != password2:
             return render_template("register.html", passwords_dont_match=True)
-        elif len(password1) < 5:
+        if len(password1) < 5:
             return render_template("register.html", password_too_short=True)
-        elif users.username_exists(username):
+        if users.username_exists(username):
             return render_template("register.html", username_exists=username)
         if users.create(username, password1):
             return redirect("/")
         else:
-            return render_template("index.html", eventlist=events.list(), message="Käyttäjätunnuksen luomisessa tapahtui odottamaton virhe")
+            return render_template("error.html",
+                                   message="Käyttäjätunnuksen luomisessa tapahtui odottamaton virhe")
+    return redirect("/")
 
 ########        events
 @app.route("/event", methods=["GET", "POST"])
 def create_event():
     if request.method == "GET" and logged_in():
         return render_template("event_form.html")
-    elif request.method == "POST" and logged_in():
+    if request.method == "POST" and logged_in():
         event = Event(users.logged_in(),
-                        None,                          # 'event.created_at' is set to None here.
-                        request.form["start_time"],    # Correct timestamp will be set in 
-                        request.form["end_time"],      # create() method in event_db_dao.
-                        request.form["description"],
-                        request.form["info"])
+                      None,                          # 'event.created_at' is set to None here.
+                      request.form["start_time"],    # Correct timestamp will be set in
+                      request.form["end_time"],      # create() method in event_db_dao.
+                      request.form["description"],
+                      request.form["info"])
         duplicates = events.duplicates(event)
         if duplicates:
             events.temp_event = event
-            return render_template("event_form.html", 
-                                    count=len(duplicates),
-                                    duplicates=duplicates,
-                                    event=event,
-                                    start_time=parse_time(duplicates[0].start_time, "ei ilmoitettu"))
+            return render_template("event_form.html",
+                                   count=len(duplicates),
+                                   duplicates=duplicates,
+                                   event=event,
+                                   start_time=parse_time(duplicates[0].start_time, "ei ilmoitettu"))
         if not events.create(event):
             return render_template("error.html", message="virhe tapahtuman lisäämisessä")
     return redirect("/")
@@ -112,10 +113,10 @@ def event(id):
     event.created_at = parse_time(event.created_at)
 
     return render_template("event.html",
-                            id=id,
-                            username=users.username(event.user_id),
-                            event=event,
-                            is_attending=users.user_attending_to(logged_in(), id))
+                           id=id,
+                           username=users.username(event.user_id),
+                           event=event,
+                           is_attending=users.user_attending_to(logged_in(), id))
 
 @app.route("/event/<int:id>/attend")
 def attend_event(id):
@@ -130,9 +131,9 @@ def user(id):
         return redirect("/")
     user_data = users.get_data(id)
     if user_data:
-        return render_template("user.html", 
-                                user=user_data,
-                                friend=friends.is_friend(logged_in(), id))
+        return render_template("user.html",
+                               user=user_data,
+                               friend=friends.is_friend(logged_in(), id))
     return redirect("/")
 
 ########        friends
