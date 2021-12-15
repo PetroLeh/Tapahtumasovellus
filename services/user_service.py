@@ -8,6 +8,9 @@ class UserService:
         self.friends = friend_service
         self.groups = group_service
 
+    def get_all(self, user_id):
+        return self.dao.get_all(user_id)
+
     def get_data(self, id):
         if self.logged_in():
             if id == self.logged_in() or self.is_admin():

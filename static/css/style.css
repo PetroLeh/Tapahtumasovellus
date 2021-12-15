@@ -1,0 +1,8 @@
+a {
+    letter-spacing: 1px;
+    transition: all 0.5s;
+}
+
+a:hover {
+    letter-spacing: 2px;    
+}

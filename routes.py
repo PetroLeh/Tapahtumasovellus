@@ -99,7 +99,7 @@ def handle_duplicate():
     events.temp_event = None
     return redirect("/")
 
-@app.route("/event/<int:id>/remove")
+@app.route("/event/<int:id>/remove", methods=["POST"])
 def remove_event(id):
     if (logged_in() == events.get_user(id) or users.is_admin()):
         events.remove(id)
@@ -133,7 +133,8 @@ def user(id):
     if user_data:
         return render_template("user.html",
                                user=user_data,
-                               friend=friends.is_friend(logged_in(), id))
+                               friend=friends.is_friend(logged_in(), id),
+                               all_users=users.get_all(logged_in()))                               
     return redirect("/")
 
 ########        friends

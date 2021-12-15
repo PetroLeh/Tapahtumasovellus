@@ -14,14 +14,32 @@
                 <a href={{ url_for("add_friend", id=user.id)}}>lisää ystäväksi</a>
             {% endif %}
         </div>
+
+                <div class="container mt-2 ml-2 p-3 shadow" style="background-color:aliceblue; max-height: 600px; overflow-y: scroll;">
+                <h5 class="text-center">Selaa käyttäjiä</h5>
+                <hr>
+                <ul>
+                {% for u in all_users %}
+                    <li style="margin: 5px;">
+                        <a href={{ url_for("user", id=u.id)}}>{{ u.username }}</a>
+                        {% if u.is_friend %}<span>(ystävä)</span>{% endif %} <br>
+                    </li>            
+                {% endfor %}
+                </ul>
+                </div>
+
     </div>
     <div class="col">
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
             <h5 class="text-center">ystävät</h5>
             <hr>
-            {% for friend in user.friends %}
-                <a href={{ url_for("user", id=friend.id)}}>{{ friend.username }}</a><br>
-            {% endfor %}
+            <ul>
+                {% for friend in user.friends %}
+                <li style="margin: 5px;">
+                    <a href={{ url_for("user", id=friend.id)}}>{{ friend.username }}</a><br>
+                </li>
+                {% endfor %}
+                </ul>
             <hr>
             <h5 class="text-center">ystäväkutsut</h5>
             <hr>
@@ -42,18 +60,32 @@
                 <a href={{ url_for("add_friend", id=user.id)}}>lisää ystäväksi</a>
             {% endif %}
         </div>
+
+        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:aliceblue; max-height: 600px; overflow-y: scroll;">
+            <h5 class="text-center">Selaa käyttäjiä</h5>
+            <hr>
+            <ul>
+            {% for u in all_users %}
+                <li style="margin: 5px;">
+                    <a href={{ url_for("user", id=u.id)}}>{{ u.username }}</a>
+                    {% if u.is_friend %}<span>(ystävä)</span>{% endif %} <br>
+                </li>            
+            {% endfor %}
+            </ul>
+            </div>
+
     </div>
     <div class="col">
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
             <h5 class="text-center">ystävät</h5>
             <hr>
-            <ol>
+            <ul>
             {% for friend in user.friends %}
-            <li>
+            <li style="margin: 5px;">
                 <a href={{ url_for("user", id=friend.id)}}>{{ friend.username }}</a><br>
             </li>
             {% endfor %}
-            </ol>
+            </ul>
         </div>
     </div>
 </div>
