@@ -47,9 +47,13 @@
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
             <h5 class="text-center">ystävät</h5>
             <hr>
+            <ol>
             {% for friend in user.friends %}
+            <li>
                 <a href={{ url_for("user", id=friend.id)}}>{{ friend.username }}</a><br>
+            </li>
             {% endfor %}
+            </ol>
         </div>
     </div>
 </div>

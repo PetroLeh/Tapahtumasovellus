@@ -1,4 +1,4 @@
-from repositories import event_db_dao, user_db_dao, friend_db_dao, group_db_dao
+from dao import event_db_dao, user_db_dao, friend_db_dao, group_db_dao
 
 from services.user_service import UserService
 from services.friend_service import FriendService

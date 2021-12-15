@@ -2,3 +2,5 @@
 __pycache__
 venv
 reset_db.sql
+prefilled_schema.sql
+

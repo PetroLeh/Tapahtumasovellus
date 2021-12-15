@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request
-
 from app import app
+
 from service_config import Event, events, users, friends, groups
 
 def parse_time(value, value2=""):
