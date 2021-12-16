@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, session, abort
 from app import app
 
 from service_config import Event, events, users, friends, groups
@@ -15,6 +15,9 @@ def parse_time(value, value2=""):
         day = days[value.strftime("%A")]
         return day + value.strftime(" %d.%m.%Y  klo %H:%M")
     return value2
+
+def map_list_to_int(list_to_map):
+    return [int(item) for item in list_to_map]
 
 def logged_in():
     return users.logged_in()
@@ -44,7 +47,6 @@ def logout():
     users.logout()
     return redirect("/")
 
-
 ########        register new user
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -73,6 +75,8 @@ def create_event():
     if request.method == "GET" and logged_in():
         return render_template("event_form.html")
     if request.method == "POST" and logged_in():
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         event = Event(users.logged_in(),
                       None,                          # 'event.created_at' is set to None here.
                       request.form["start_time"],    # Correct timestamp will be set in
@@ -102,6 +106,8 @@ def handle_duplicate():
 @app.route("/event/<int:id>/remove", methods=["POST"])
 def remove_event(id):
     if (logged_in() == events.get_user(id) or users.is_admin()):
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         events.remove(id)
     return redirect("/")
 
@@ -112,15 +118,28 @@ def event(id):
     event.end_time = parse_time(event.end_time, "ei ilmoitettu")
     event.created_at = parse_time(event.created_at)
 
+    friends_invited = friends.who_are_invited_to_event(id, logged_in())
+    print(friends_invited)
     return render_template("event.html",
                            id=id,
                            username=users.username(event.user_id),
                            event=event,
-                           is_attending=users.user_attending_to(logged_in(), id))
+                           is_attending=users.user_attending_to(logged_in(), id),
+                           friends=friends.get_friends(logged_in()),
+                           friends_invited=friends_invited)
 
 @app.route("/event/<int:id>/attend")
 def attend_event(id):
     users.attend_event(id)
+    return redirect("/event/" + str(id))
+
+@app.route("/event/<int:id>/invite", methods=["POST"])
+def invite_to_event(id):
+    if logged_in():
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        friends_to_invite = map_list_to_int(request.form.getlist("friend"))
+        friends.invite_to_event(logged_in(), friends_to_invite, id)
     return redirect("/event/" + str(id))
 
 
@@ -134,7 +153,9 @@ def user(id):
         return render_template("user.html",
                                user=user_data,
                                friend=friends.is_friend(logged_in(), id),
-                               all_users=users.get_all(logged_in()))                               
+                               has_friend_invitation=friends.has_friend_invitation(logged_in(), id),
+                               has_invited_as_a_friend=friends.has_friend_invitation(id, logged_in()),
+                               all_users=users.get_all(logged_in()))                        
     return redirect("/")
 
 ########        friends
@@ -144,13 +165,30 @@ def friends_page():
         return render_template("friends.html")
     return redirect("/")
 
+@app.route("/friends/send_friend_invitation/<int:id>")
+def send_friend_invitation(id):
+    if logged_in():
+        if not friends.has_friend_invitation(logged_in(), id) and not friends.has_friend_invitation(id, logged_in()):
+            if friends.add_friend_invitation(logged_in(), id):
+                return redirect("/user/" + str(id))
+            return render_template("error.html", message="Virhe ystäväkutsun lähettämisessä")
+    return redirect("/")
+
 @app.route("/friends/add/<int:id>")
 def add_friend(id):
     if logged_in():
-        if friends.add_friend(logged_in(), id):
-            return redirect("/user/" + str(id))
-        return render_template("error.html", message="Virhe ystävän lisäämisessä")
-    return redirect("/")
+        print("logged in", logged_in(), "add", id)
+        if not friends.is_friend(logged_in(), id):
+            print("not friends")
+            if friends.has_friend_invitation(id, logged_in()):
+                print("has invitation", id,"->",logged_in())
+                if friends.add_friend(logged_in(), id):
+                    print("friend added")
+                    friends.remove_friend_invitation(id, logged_in())                
+                return redirect("/user/" + str(id))
+            else:
+                print("has no invitation!")
+            return redirect("/")
 
 ########    groups
 @app.route("/groups")

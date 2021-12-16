@@ -83,7 +83,7 @@
                     <a href="/" class="btn btn-primary">peruuta</a>
                 </div>
             </div>
-            
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">    
         </form>
     </div>
 {% endif %}

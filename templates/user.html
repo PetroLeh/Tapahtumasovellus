@@ -9,9 +9,15 @@
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
             <h5 class="text-center">käyttäjätiedot</h5>
             <hr>
-            <p>käyttäjänimi: <b>{{ user.username }}</b></p>
-            {% if not friend and session.user_id != user.id %}
-                <a href={{ url_for("add_friend", id=user.id)}}>lisää ystäväksi</a>
+            <h5 style="text-shadow: 1px;">käyttäjänimi: {{ user.username }}</h5>
+            {% if not friend and has_friend_invitation %}
+                <p>Ystäväkutsu lähetetty</p> 
+            {% elif not friend and has_invited_as_a_friend %}
+                <p>{{ user.username }} on kutsunut sinut ystäväksesi. <span><a href={{ url_for("add_friend", id=user.id)}} style="margin-left: 15px;">hyväksy</a></span><span><a href="#" style="margin-left: 15px;">hylkää</a></span></p>
+            {% elif not friend and user.id != session.user_id %}
+                <a href={{ url_for("send_friend_invitation", id=user.id)}}>lähetä ystäväkutsu</a>
+            {% elif user.id != session.user_id %}
+                <p>ystävälistalla</p>
             {% endif %}
         </div>
 
@@ -31,7 +37,7 @@
     </div>
     <div class="col">
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
-            <h5 class="text-center">ystävät</h5>
+            <h5 class="text-center">ystävät ({{ user.friends | length }})</h5>
             <hr>
             <ul>
                 {% for friend in user.friends %}
@@ -41,11 +47,15 @@
                 {% endfor %}
                 </ul>
             <hr>
-            <h5 class="text-center">ystäväkutsut</h5>
+            <h5 class="text-center">ystäväkutsut ({{ user.friend_invitations | length }})</h5>
             <hr>
-            {% for invitation in user.friend_invitations %}
-            <a href={{ url_for("user", id=invitation.id)}}>{{ invitation.username }}</a>               
-            {% endfor %}
+            <ul>
+                {% for invitation in user.friend_invitations %}
+                <li>    
+                    <a href={{ url_for("user", id=invitation.id)}}>{{ invitation.username }}</a> 
+                </li>             
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </div>
@@ -55,9 +65,15 @@
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
             <h5 class="text-center">käyttäjätiedot</h5>
             <hr>
-            <p>käyttäjänimi: <b>{{ user.username }}</b></p>
-            {% if not friend %}
-                <a href={{ url_for("add_friend", id=user.id)}}>lisää ystäväksi</a>
+            <h5 style="text-shadow: 1px;">käyttäjänimi: {{ user.username }}</h5>
+            {% if not friend and has_friend_invitation %}
+                <p>Ystäväkutsu lähetetty</p> 
+            {% elif not friend and has_invited_as_a_friend %}
+                <p>{{ user.username }} on kutsunut sinut ystäväksesi. <span><a href={{ url_for("add_friend", id=user.id)}} style="margin-left: 15px;">hyväksy</a></span>  <span><a href="#" style="margin-left: 15px;">hylkää</a></span></p>
+            {% elif not friend %}
+                <a href={{ url_for("send_friend_invitation", id=user.id)}}>lähetä ystäväkutsu</a>
+            {% else %}
+                <p>ystävälistalla</p>
             {% endif %}
         </div>
 
@@ -77,7 +93,7 @@
     </div>
     <div class="col">
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
-            <h5 class="text-center">ystävät</h5>
+            <h5 class="text-center">käyttäjän {{ user.username }} ystävät ({{ user.friends | length }})</h5>
             <hr>
             <ul>
             {% for friend in user.friends %}

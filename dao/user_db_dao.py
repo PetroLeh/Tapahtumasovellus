@@ -1,6 +1,7 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import session
 from db import db
+from secrets import token_hex
 
 def login(username, password) -> bool:
     sql = "select id, username, password, is_admin FROM users WHERE LOWER(username)=:username"
@@ -12,6 +13,8 @@ def login(username, password) -> bool:
         session["user_id"] = user.id
         session["username"] = user.username
         session["is_admin"] = user.is_admin
+        session["csrf_token"] = token_hex(16)
+
         return True
     return False
 

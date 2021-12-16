@@ -44,6 +44,7 @@ class UserService:
             del session["is_admin"]
             del session["user_id"]
             del session["username"]
+            del session["csrf_token"]
 
     def logged_in(self) -> int:
         return session.get("user_id", 0)

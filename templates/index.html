@@ -38,6 +38,7 @@
                         <span>
                             <form action='{{ url_for("remove_event", id=event.id) }}' method="POST" onSubmit='return confirm("Haluatko varmasti poistaa ilmoituksen?")'>
                             <input type="submit" class="btn btn-primary" value="poista ilmoitus">
+                            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                             </form>
                         </span>
                         </td>

@@ -6,3 +6,23 @@ a {
 a:hover {
     letter-spacing: 2px;    
 }
+
+.friendBox {
+    letter-spacing: 2px;
+    border: 1px;
+    color: dodgerblue;
+}
+
+#checkboxes {
+    display: none;
+    border: 1px
+}
+
+#checkboxes label{
+    display: block;
+    margin: 2px;;
+}
+
+#checkboxes label:hover {
+    background-color: ghostwhite;
+}

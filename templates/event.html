@@ -35,19 +35,71 @@
                 <h5 class="card-header text-center">
                     tapahtumakohtaiset toiminnot
                 </h5>
+                <br>
             {% if is_attending %}
-                <p>Olet ilmoittanut osallistuvasi tähän tapahtumaan.</p>
+                <h5>Olet ilmoittanut osallistuvasi tähän tapahtumaan.</h5>
                 <a href={{ url_for("attend_event", id=id)}}><b>peru osallistuminen</b></a>
                 <hr>
             {% else %}
-                <p>Et ole osallistumassa tähän.</p>
+                <h5>Et ole osallistumassa tähän tapahtumaan.</h5>
                 <a href={{ url_for("attend_event", id=id)}}><b>osallistu</b></a>
                 <hr>
             {% endif %}
+                <div class="card-body">
+                    <form action={{ url_for("invite_to_event", id=id)}} method="POST">
+                    <h5>kutsu <span id="friendBox" class="btn btn-secondary dropdown-toggle" onclick="showFriends()">ystäviä</span> tähän tapahtumaan</h5>
+                    <div id="checkboxes" style="max-height: 150px; overflow-y: scroll;">
+                        <div class="row">
+                            <div class="col-4">
+                                <p style="padding-top: 10px;"><b>valitse ystävät ja</b></p>
+                            </div>
+                            <div class="col">
+                                <input type="submit" class="btn btn-primary" value="lähetä kutsu">
+                            </div>
+                        </div>
+                        {% set invited_ids=[] %}
+                        {% for f in friends_invited %}
+                        {{ invited_ids.append(f.id) }}
+                        {% endfor %}
+
+                        {% for friend in friends %}
+                        <label for="{{ friend.username }}">
+                            <input type="checkbox" name="friend" value={{ friend.id }} {% if friend.id in invited_ids %} checked {% endif %}/> {{ friend.username }}
+                        </label>
+                        {% endfor %}
+ 
+                    </div>
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    </form>
+                    {% if friends_invited %}
+                    <hr>
+                    <h5>Olet kutsunut tähän tapahtumaan seuraavat ystävät:</h5>
+                    <ul>
+                    {% for friend in friends_invited %}
+                        <li><a href={{ url_for("user", id=friend.id) }}>{{ friend.username }}</a></li>
+                    {% endfor %}
+                    </ul>
+                    {% endif %} 
+                </div>
             </div>
         </div>
         {% endif %}
 
     </div>
 </div>
+<script>
+    var expanded = false;
+
+    function showFriends() {
+        var checkboxes = document.getElementById("checkboxes");
+        if (!expanded) {
+            checkboxes.style.display = "block";
+        } else {
+            checkboxes.style.display = "none";
+        }
+        expanded = !expanded
+    }
+
+</script>
 {% endblock %}
+
