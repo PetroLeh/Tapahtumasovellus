@@ -34,7 +34,7 @@ def create(event):
         event.description = "ei kuvausta"
     try:
         sql = "INSERT INTO events (user_id, created_at, start_time, end_time, description, info) " \
-            "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time, '')::TIMESTAMP, :description, :info)"
+            "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time, '')::TIMESTAMP, :description, :info) RETURNING id"
         result = db.session.execute(sql,
                 {"user_id":event.user_id,
                 "start_time":event.start_time,
@@ -42,9 +42,11 @@ def create(event):
                 "description":event.description,
                 "info":event.info})
         db.session.commit()
+        id = result.fetchone()[0]
+        return id
     except:
         return False
-    return True
+
 
 def get(id):
     sql = "SELECT user_id, created_at, start_time, end_time, description, info FROM events WHERE id=:id"

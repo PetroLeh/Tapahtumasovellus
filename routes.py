@@ -3,6 +3,8 @@ from app import app
 
 from service_config import Event, events, users, friends, groups
 
+########        Some help functions
+
 def parse_time(value, value2=""):
     if value:
         days = {"Monday": "Maanantai",
@@ -18,6 +20,19 @@ def parse_time(value, value2=""):
 
 def map_list_to_int(list_to_map):
     return [int(item) for item in list_to_map]
+
+def get_ids(user_list):
+    res = []
+    for user in user_list:
+        res.append(user.id)
+    return res
+
+def remove_from_list(original_list, to_remove: list):
+    res = []
+    for item in original_list:
+        if item not in to_remove:
+            res.append(item)
+    return res
 
 def logged_in():
     return users.logged_in()
@@ -91,17 +106,20 @@ def create_event():
                                    duplicates=duplicates,
                                    event=event,
                                    start_time=parse_time(duplicates[0].start_time, "ei ilmoitettu"))
-        if not events.create(event):
+        event_id = events.create(event)
+        return redirect("/event/" + str(event_id))
+        if not event_id:
             return render_template("error.html", message="virhe tapahtuman lisäämisessä")
     return redirect("/")
 
 @app.route("/event/duplicate")
 def handle_duplicate():
-    if not events.create(events.temp_event):
+    event_id = events.create(events.temp_event)
+    if not event_id:
         events.temp_event = None
         return render_template("error.html", message="virhe tapahtuman lisäämisessä")
     events.temp_event = None
-    return redirect("/")
+    return redirect("/event/" + str(event_id))
 
 @app.route("/event/<int:id>/remove", methods=["POST"])
 def remove_event(id):
@@ -139,6 +157,7 @@ def invite_to_event(id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
         friends_to_invite = map_list_to_int(request.form.getlist("friend"))
+        friends_to_invite = remove_from_list(friends_to_invite, get_ids(friends.who_are_invited_to_event(id, logged_in())))
         friends.invite_to_event(logged_in(), friends_to_invite, id)
     return redirect("/event/" + str(id))
 
