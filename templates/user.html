@@ -58,7 +58,7 @@
             </ul>
         </div>
         <div class="container mt-2 ml-2 p-3 shadow" style="background-color:aliceblue; max-height: 300px; overflow-y: scroll;">
-            <h5 class="text-center">Tapahtumat, joihin sinut on kutsuttu</h5>
+            <h5 class="text-center">Tapahtumat, joihin {% if session.user_id == user.id %}sinut {% else %}{{ user.username }} {% endif %}on kutsuttu</h5>
             <hr>
             <ul>
             {% for invitation in event_invitations %}

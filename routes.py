@@ -212,7 +212,7 @@ def user(id):
                                friend=friends.is_friend(logged_in(), id),
                                has_friend_invitation=friends.has_friend_invitation(logged_in(), id),
                                has_invited_as_a_friend=friends.has_friend_invitation(id, logged_in()),
-                               event_invitations=events.invitations_to_user(logged_in()),
+                               event_invitations=events.invitations_to_user(id),
                                all_users=users.get_all(logged_in()))                        
     return redirect("/")
 
