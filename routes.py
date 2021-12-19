@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, session, abort
 from app import app
 
-from service_config import Event, events, users, friends, groups
+from service_config import Event, events, users, friends, messages
 
 from datetime import datetime
 
@@ -240,9 +240,21 @@ def add_friend(id):
                 return redirect("/user/" + str(id))
     return redirect("/")
 
-########    groups
-@app.route("/groups")
-def groups():
-    if logged_in():
-        return render_template("groups.html")
+########        messages
+
+@app.route("/messages", methods=["GET", "POST"])
+def message():
+    if request.method == "GET" and logged_in():
+        return render_template("messages.html",
+                               friends=friends.get_friends(logged_in()),
+                               messages_sent=messages.sent(logged_in()),
+                               messages_received=messages.received(logged_in()))
+    if request.method == "POST" and logged_in():
+        receiver = request.form["receiver"]
+        content = request.form["content"]
+        if not messages.send_message(logged_in(), receiver, content):
+            return render_template("error.html",
+                                   message="viestin lähettämisessä tapahtui virhe")
+        return redirect("/messages")
     return redirect("/")
+

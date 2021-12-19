@@ -3,10 +3,9 @@ from flask import session
 
 class UserService:
 
-    def __init__(self, dao, friend_service, group_service):
+    def __init__(self, dao, friend_service):
         self.dao = dao
         self.friends = friend_service
-        self.groups = group_service
 
     def get_all(self, user_id):
         return self.dao.get_all(user_id)
@@ -16,7 +15,6 @@ class UserService:
             if id == self.logged_in() or self.is_admin():
                 data = {"id":id,
                         "username": self.dao.username(id),
-                        "groups": self.groups.get_groups_of_user(id),
                         "friends": self.friends.get_friends(id),
                         "friend_invitations":self.friends.get_friend_invitations(id),
                         "attendances": [1, 3],
@@ -27,7 +25,6 @@ class UserService:
             else:
                 data = {"id":id,
                         "username": self.dao.username(id),
-                        "groups": self.groups.get_groups_of_user(id),
                         "friends": self.friends.get_friends(id)
                         }
             return data
