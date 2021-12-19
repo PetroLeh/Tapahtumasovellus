@@ -60,6 +60,7 @@ CREATE TABLE invitations (
 
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP,
     user_from INTEGER REFERENCES users ON DELETE SET NULL,
     user_to INTEGER REFERENCES users ON DELETE SET NULL,
     message TEXT

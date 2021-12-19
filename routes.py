@@ -197,6 +197,10 @@ def invite_to_event(id):
         friends.invite_to_event(logged_in(), friends_to_invite, id)
     return redirect("/event/" + str(id))
 
+@app.route("/sort_method/<string:sorter>")
+def sort_method(sorter):
+    session["event_sorter"] = sorter
+    return redirect("/")
 
 ########        users personal page
 @app.route("/user/<int:id>")
@@ -245,10 +249,12 @@ def add_friend(id):
 @app.route("/messages", methods=["GET", "POST"])
 def message():
     if request.method == "GET" and logged_in():
+        messages_sent = messages.sent(logged_in())
+        messages_received = messages.received(logged_in())
         return render_template("messages.html",
                                friends=friends.get_friends(logged_in()),
-                               messages_sent=messages.sent(logged_in()),
-                               messages_received=messages.received(logged_in()))
+                               messages_sent=messages_sent,
+                               messages_received=messages_received)
     if request.method == "POST" and logged_in():
         receiver = request.form["receiver"]
         content = request.form["content"]

@@ -7,7 +7,15 @@
 </div>
 {% endif %}
     <div class="container p-3 border shadow bg-white rounded" style="max-height: 600px; overflow-y: scroll;">        
+        {% if session.user_id %}
+        <h5 class="text-center">Tapahtumat (järjestä: <span>
+            <a href={{ url_for("sort_method", sorter="created_at DESC") }}>ilmoitusajan</a></span> - <span>
+            <a href={{ url_for("sort_method", sorter="start_time DESC") }}>alkamisajan</a></span> - <span>
+            <a href={{ url_for("sort_method", sorter="user_id") }}>ilmoittajan</a></span> mukaan)   
+        </h5>
+        {% else %}
         <h5 class="text-center">Tapahtumat</h5>
+        {% endif %}
         <table class="table table-striped">
             <thead>
                 <tr>

@@ -12,6 +12,7 @@ class Event:
 def list_events(order_by, event_filter):
     try:
         by_user = ""
+        order_by = "e." + order_by
         if event_filter:
             by_user = "AND u.id="  + str(event_filter)
         sql = "SELECT e.id AS id, COALESCE(e.description, 'ei kuvausta') AS description, e.start_time AS start_time, u.username AS username FROM events e, users u " \

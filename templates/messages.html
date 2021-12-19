@@ -53,10 +53,10 @@
                            <a href={{ url_for("user", id=message.receiver) }}>{{ message.username }}</a>
                         </td>
                         <td>
-                            aika                   
+                            {{ message.created_at.strftime("%d.%m.%Y %H:%M") }}           
                         </td>
                         <td>
-                          {{ message.message }}
+                            {{ message.message }}
                         </td>
                     </tr>
                     {% endfor %}
@@ -82,7 +82,7 @@
                             <a href={{ url_for("user", id=message.sender) }}>{{ message.username }}</a>
                         </td>
                         <td>
-                            aika                   
+                            {{ message.created_at.strftime("%d.%m.%Y %H:%M") }}
                         </td>
                         <td>
                             {{ message.message }}
