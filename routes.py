@@ -3,7 +3,29 @@ from app import app
 
 from service_config import Event, events, users, friends, groups
 
+from datetime import datetime
+
 ########        Some help functions
+
+def validate_times(start_time, end_time):
+    now = datetime.now()
+    st = now
+    message = ""
+    if start_time:
+        st = datetime.strptime(start_time, "%Y-%m-%dT%H:%M")
+        if st < now:
+            print("alkuaika oli", start_time, "| st:", st, "| now:", now)
+            st = now            
+            message = "Alkuaika oli menneisyydessä, asetettiin tähän hetkeen. "
+            start_time = datetime.strftime(st, "%Y-%m-%dT%H:%M")
+            print("uusi alkuaika:", start_time)
+    if end_time:
+        et = datetime.strptime(end_time, "%Y-%m-%dT%H:%M")
+        if et < st:
+            end_time = ""
+            message = message + "Lopetusajaksi muutettiin 'ei ilmoitettu' sillä se oli asetettu aikaisemmaksi kuin aloitusaika tai nykyhetki."
+
+    return start_time, end_time, message
 
 def parse_time(value, value2=""):
     if value:
@@ -42,7 +64,14 @@ def logged_in():
 ########        main page
 @app.route("/")
 def index():
-    return render_template("index.html", eventlist=events.list_all())
+    if logged_in():
+        eventlist, query_successfull = events.list_events(order_by=session["event_sorter"], event_filter=session["event_filter"])
+    else:
+        eventlist, query_successfull = events.list_events(order_by="start_time", event_filter=None)
+    if query_successfull:
+        return render_template("index.html", eventlist=eventlist)
+    return render_template("error.html",
+                           message="Virhe tapahtumien lataamisessa")
 
 ########        login/logout
 @app.route("/login", methods=["GET", "POST"])
@@ -54,7 +83,8 @@ def login():
         password = request.form["password"]
         if users.login(username, password):
             return redirect("/")
-        return render_template("login.html", message="kirjautuminen ei onnistunut")
+        return render_template("login.html",
+                            message="kirjautuminen ei onnistunut")
     return redirect("/")
 
 @app.route("/logout")
@@ -92,10 +122,12 @@ def create_event():
     if request.method == "POST" and logged_in():
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
+        start_time, end_time, message = validate_times(request.form["start_time"],
+                                                       request.form["end_time"])
         event = Event(users.logged_in(),
-                      None,                          # 'event.created_at' is set to None here.
-                      request.form["start_time"],    # Correct timestamp will be set in
-                      request.form["end_time"],      # create() method in event_db_dao.
+                      None,          # 'event.created_at' is set to None here.
+                      start_time,    # Correct timestamp will be set in
+                      end_time,      # create() method in event_db_dao.
                       request.form["description"],
                       request.form["info"])
         duplicates = events.duplicates(event)
@@ -107,9 +139,14 @@ def create_event():
                                    event=event,
                                    start_time=parse_time(duplicates[0].start_time, "ei ilmoitettu"))
         event_id = events.create(event)
-        return redirect("/event/" + str(event_id))
         if not event_id:
             return render_template("error.html", message="virhe tapahtuman lisäämisessä")
+        if message:
+            eventlist, query_successfull = events.list_events(order_by=session["event_sorter"], event_filter=session["event_filter"])
+            return render_template("index.html",
+                                   eventlist=eventlist,
+                                   message=message)      
+        return redirect("/event/" + str(event_id))
     return redirect("/")
 
 @app.route("/event/duplicate")
@@ -137,7 +174,6 @@ def event(id):
     event.created_at = parse_time(event.created_at)
 
     friends_invited = friends.who_are_invited_to_event(id, logged_in())
-    print(friends_invited)
     return render_template("event.html",
                            id=id,
                            username=users.username(event.user_id),
@@ -174,6 +210,7 @@ def user(id):
                                friend=friends.is_friend(logged_in(), id),
                                has_friend_invitation=friends.has_friend_invitation(logged_in(), id),
                                has_invited_as_a_friend=friends.has_friend_invitation(id, logged_in()),
+                               event_invitations=events.invitations_to_user(logged_in()),
                                all_users=users.get_all(logged_in()))                        
     return redirect("/")
 
@@ -196,18 +233,12 @@ def send_friend_invitation(id):
 @app.route("/friends/add/<int:id>")
 def add_friend(id):
     if logged_in():
-        print("logged in", logged_in(), "add", id)
         if not friends.is_friend(logged_in(), id):
-            print("not friends")
             if friends.has_friend_invitation(id, logged_in()):
-                print("has invitation", id,"->",logged_in())
                 if friends.add_friend(logged_in(), id):
-                    print("friend added")
                     friends.remove_friend_invitation(id, logged_in())                
                 return redirect("/user/" + str(id))
-            else:
-                print("has no invitation!")
-            return redirect("/")
+    return redirect("/")
 
 ########    groups
 @app.route("/groups")

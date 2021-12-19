@@ -15,6 +15,9 @@ def login(username, password) -> bool:
         session["is_admin"] = user.is_admin
         session["csrf_token"] = token_hex(16)
 
+        session["event_filter"] = None
+        session["event_sorter"] = "start_time"
+
         return True
     return False
 

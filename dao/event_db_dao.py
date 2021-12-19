@@ -9,12 +9,18 @@ class Event:
         self.description = description
         self.info = info
 
-def list_all():
-    sql = "SELECT e.id AS id, COALESCE(e.description, 'ei kuvausta') AS description, e.start_time AS start_time, u.username AS username FROM events e, users u " \
-        "WHERE e.user_id = u.id ORDER BY e.id"
-    result = db.session.execute(sql)
-    eventlist = result.fetchall()
-    return eventlist
+def list_events(order_by, event_filter):
+    try:
+        by_user = ""
+        if event_filter:
+            by_user = "AND u.id="  + str(event_filter)
+        sql = "SELECT e.id AS id, COALESCE(e.description, 'ei kuvausta') AS description, e.start_time AS start_time, u.username AS username FROM events e, users u " \
+            "WHERE e.user_id = u.id " + by_user + " ORDER BY " + order_by + ", description"
+        result = db.session.execute(sql)
+        eventlist = result.fetchall()
+        return eventlist, True
+    except:
+        return [], False
 
 def get_user(id):
     sql = "SELECT user_id FROM events WHERE id=:id"
@@ -80,3 +86,10 @@ def duplicates(event):
                                       "description":event.description.lower()})
     duplicates = result.fetchall()
     return duplicates
+
+def invitations_to_user(id):
+    sql = "SELECT i.event_id, e.description, i.invited_by, u.username AS invited_by_name " \
+          "FROM invitations i INNER JOIN events e ON i.event_id=e.id " \
+          "INNER JOIN users u ON i.invited_by=u.id WHERE i.user_id=:id"
+    result = db.session.execute(sql, {"id": id})
+    return result.fetchall()

@@ -46,6 +46,9 @@ class UserService:
             del session["username"]
             del session["csrf_token"]
 
+            del session["event_filter"]
+            del session["event_sorter"]
+
     def logged_in(self) -> int:
         return session.get("user_id", 0)
 

@@ -57,6 +57,18 @@
                 {% endfor %}
             </ul>
         </div>
+        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:aliceblue; max-height: 300px; overflow-y: scroll;">
+            <h5 class="text-center">Tapahtumat, joihin sinut on kutsuttu</h5>
+            <hr>
+            <ul>
+            {% for invitation in event_invitations %}
+            <li style="margin: 5px;">
+                <a href={{ url_for("user", id=invitation.invited_by) }}>{{ invitation.invited_by_name }}</a> kutsui sinut tapahtumaan
+                <span><a href={{ url_for("event", id=invitation.event_id) }}>{{ invitation.description }}</a></span><br>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
     </div>
 </div>
 {% else %}
@@ -98,7 +110,7 @@
             <ul>
             {% for friend in user.friends %}
             <li style="margin: 5px;">
-                <a href={{ url_for("user", id=friend.id)}}>{{ friend.username }}</a><br>
+                <a href={{ url_for("user", id=friend.id) }}>{{ friend.username }}</a><br>
             </li>
             {% endfor %}
             </ul>

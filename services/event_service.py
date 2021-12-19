@@ -15,13 +15,12 @@ class EventService:
         self.dao = dao
         self.temp_event = None      # This variable is used for temporarily store an event
                                     # when handling attempts to add duplicate events
-    def list_all(self):
-        eventlist = self.dao.list_all()
-        return eventlist
+
+    def list_events(self, order_by, event_filter=None):
+        return self.dao.list_events(order_by, event_filter)
 
     def get_user(self, event_id):
-        user_id = self.dao.get_user(event_id)
-        return user_id
+        return self.dao.get_user(event_id)
 
     def remove(self, id):
         self.dao.remove(id)
@@ -37,3 +36,6 @@ class EventService:
 
     def duplicates(self, event):
         return self.dao.duplicates(event)
+
+    def invitations_to_user(self, id):
+        return self.dao.invitations_to_user(id)
