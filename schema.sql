@@ -65,5 +65,4 @@ CREATE TABLE messages (
     user_to INTEGER REFERENCES users ON DELETE SET NULL,
     message TEXT
 );
-    
-    
+

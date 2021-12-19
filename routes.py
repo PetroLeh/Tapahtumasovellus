@@ -14,11 +14,9 @@ def validate_times(start_time, end_time):
     if start_time:
         st = datetime.strptime(start_time, "%Y-%m-%dT%H:%M")
         if st < now:
-            print("alkuaika oli", start_time, "| st:", st, "| now:", now)
             st = now            
             message = "Alkuaika oli menneisyydessä, asetettiin tähän hetkeen. "
             start_time = datetime.strftime(st, "%Y-%m-%dT%H:%M")
-            print("uusi alkuaika:", start_time)
     if end_time:
         et = datetime.strptime(end_time, "%Y-%m-%dT%H:%M")
         if et < st:
