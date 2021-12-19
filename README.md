@@ -10,7 +10,6 @@
 >>
 >> salasana: **salakana**
 >> 
->> Tosin tässä vaiheessa ei vielä ole paljon testattavaa...
 >
 > - linkki sovellukseen: <https://tapahtuu.herokuapp.com>
 
@@ -34,3 +33,18 @@ Rekisteröitynyt käyttäjä voi poistaa kalenterista itse lisäämänsä tapaht
 
 **Ylläpitäjällä** on samat oikeudet kuin rekisteröityneellä käyttäjällä ja tämän lisäksi ylläpitäjä voi poistaa
 kalenterista myös muiden lisäämiä tapahtumia ja kommentteja.
+
+## Aikataulun puitteissa valmistunut versio
+
+Joitain suunniteltuja ominaisuuksia jäi pois, kuten ryhmien luominen ja siihen liittyvä tapahtumien näkyvyyden rajoittaminen.
+Tapahtumilla ei myöskään ole varsinaisesti eri kategorioita, joihin ne jaettaisiin vaan vain sanallinen kuvaus tapahtumasta.
+
+Ominaisuus, jota alkuperäisessä suunnitelmassa ei ollut, mutta julkaistuun versioon tuli, on viestien lähettäminen toisille käyttäjille.
+
+### Parannettavaa ja jatkokehitysideoita
+
+* Tekstikenttien muotoilussa tapahtuma ja viestilomakkeissa on parannettavaa
+* käyttöliittymän ulkoasu ja käytettävyys ovat jokseenkin kömpelöitä
+* koodissa on paljon refaktoroinnin ja siistimisen varaa
+* tapahtumakutsujen ja viestien poistomahdollisuus
+* ryhmien muodostaminen
