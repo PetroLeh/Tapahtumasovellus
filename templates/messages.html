@@ -3,6 +3,67 @@
 {% block page_content %}
 
 {% if session.user_id %}
+<div class="row">
+    <div class="col">
+        <div class="container p-3 m-3 border shadow bg-white rounded" style="max-height: 600px; overflow-y: scroll;">        
+            <h5 class="text-center">Lähetetyt viestit</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>vastaanottaja</th>
+                        <th>aika</th>
+                        <th>viesti</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages_sent %}
+                    <tr>
+                        <td>
+                           <a href={{ url_for("user", id=message.receiver) }}>{{ message.username }}</a>
+                        </td>
+                        <td>
+                            {{ message.created_at.strftime("%d.%m.%Y %H:%M") }}           
+                        </td>
+                        <td>
+                            <textarea class="textcontent" style="height: 200px;" readonly>{{ message.message }}</textarea>                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col">
+        <div class="container p-3 m-3 border shadow bg-white rounded" style="max-height: 600px; overflow-y: scroll;">        
+            <h5 class="text-center">Vastaanotetut viestit</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>lähettäjä</th>
+                        <th>aika</th>
+                        <th>viesti</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages_received %}
+                    <tr>
+                        <td>
+                            <a href={{ url_for("user", id=message.sender) }}>{{ message.username }}</a>
+                        </td>
+                        <td>
+                            {{ message.created_at.strftime("%d.%m.%Y %H:%M") }}
+                        </td>
+                        <td>
+                            <textarea class="textcontent" style="height: 200px" readonly>{{ message.message }}</textarea>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <div class="container p-2 border shadow bg-white">
     <h5 class="text-center">Kirjoita viesti</h5>
     <hr>
@@ -32,67 +93,6 @@
         </div>
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">    
     </form>
-</div>
-
-<div class="row">
-    <div class="col">
-        <div class="container p-3 m-3 border shadow bg-white rounded" style="max-height: 600px; overflow-y: scroll;">        
-            <h5 class="text-center">Lähetetyt viestit</h5>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>vastaanottaja</th>
-                        <th>aika</th>
-                        <th>viesti</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for message in messages_sent %}
-                    <tr>
-                        <td>
-                           <a href={{ url_for("user", id=message.receiver) }}>{{ message.username }}</a>
-                        </td>
-                        <td>
-                            {{ message.created_at.strftime("%d.%m.%Y %H:%M") }}           
-                        </td>
-                        <td>
-                            {{ message.message }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col">
-        <div class="container p-3 m-3 border shadow bg-white rounded" style="max-height: 600px; overflow-y: scroll;">        
-            <h5 class="text-center">Vastaanotetut viestit</h5>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>lähettäjä</th>
-                        <th>aika</th>
-                        <th>viesti</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for message in messages_received %}
-                    <tr>
-                        <td>
-                            <a href={{ url_for("user", id=message.sender) }}>{{ message.username }}</a>
-                        </td>
-                        <td>
-                            {{ message.created_at.strftime("%d.%m.%Y %H:%M") }}
-                        </td>
-                        <td>
-                            {{ message.message }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
 
 <script>

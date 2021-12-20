@@ -13,6 +13,13 @@ a:hover {
     color: dodgerblue;
 }
 
+.textcontent {
+    border: none;
+    letter-spacing: 1px;
+    font-style: oblique;
+    max-height: 400px;
+}
+
 #checkboxes {
     display: none;
     border: 1px
@@ -26,3 +33,4 @@ a:hover {
 #checkboxes label:hover {
     background-color: ghostwhite;
 }
+

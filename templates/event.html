@@ -8,11 +8,8 @@
                 <h5 class="card-header text-center">
                     {{ event.description }}
                 </h5>
-                <div class="card-body border rounded">
-                    <p class="card-text">
-                        {{ event.info }}
-                    </p>
-                </div>
+                <textarea class="textcontent" style="text-indent: 0px; height: 300px" readonly>{{ event.info }}</textarea>
+                
                 <div class="card-body">
                     <p class="card-text">
                         Alkaa: <b>{{ event.start_time }}</b>
