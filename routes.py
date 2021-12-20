@@ -239,7 +239,7 @@ def add_friend(id):
             if friends.has_friend_invitation(id, logged_in()):
                 if friends.add_friend(logged_in(), id):
                     friends.remove_friend_invitation(id, logged_in())                
-                return redirect("/user/" + str(id))
+                return redirect("/user/" + str(logged_in()))
     return redirect("/")
 
 ########        messages

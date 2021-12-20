@@ -5,8 +5,8 @@
 
 {% if user.rights_to_modify %}
 <div class="row">
-    <div class="col">
-        <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
+    <div class="col-5">
+        <div class="container m-3 p-3 shadow" style="background-color: antiquewhite;">
             <h5 class="text-center">käyttäjätiedot</h5>
             <hr>
             <h5 style="text-shadow: 1px;">käyttäjänimi: {{ user.username }}</h5>
@@ -21,7 +21,7 @@
             {% endif %}
         </div>
 
-                <div class="container mt-2 ml-2 p-3 shadow" style="background-color:aliceblue; max-height: 600px; overflow-y: scroll;">
+                <div class="container m-3 p-3 shadow" style="background-color:aliceblue; max-height: 600px; overflow-y: scroll;">
                 <h5 class="text-center">Selaa käyttäjiä</h5>
                 <hr>
                 <ul>
@@ -35,8 +35,8 @@
                 </div>
 
     </div>
-    <div class="col">
-        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
+    <div class="col-5">
+        <div class="container m-3 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
             <h5 class="text-center">ystävät ({{ user.friends | length }})</h5>
             <hr>
             <ul>
@@ -51,13 +51,16 @@
             <hr>
             <ul>
                 {% for invitation in user.friend_invitations %}
-                <li>    
-                    <a href={{ url_for("user", id=invitation.id)}}>{{ invitation.username }}</a> 
+                <li style="margin: 5px;">    
+                    <a href={{ url_for("user", id=invitation.id)}}>{{ invitation.username }}</a>
+                    {% if user.id == session.user_id %}
+                    <span>&emsp;&emsp;</span><a href={{ url_for("add_friend", id=invitation.id)}}>lisää ystäväksi</a>
+                    {% endif %}
                 </li>             
                 {% endfor %}
             </ul>
         </div>
-        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:aliceblue; max-height: 300px; overflow-y: scroll;">
+        <div class="container m-3 p-3 shadow" style="background-color:aliceblue; max-height: 300px; overflow-y: scroll;">
             <h5 class="text-center">Tapahtumat, joihin {% if session.user_id == user.id %}sinut {% else %}{{ user.username }} {% endif %}on kutsuttu</h5>
             <hr>
             <ul>
@@ -73,8 +76,8 @@
 </div>
 {% else %}
 <div class="row">
-    <div class="col">
-        <div class="container mt-2 ml-2 p-3 shadow" style="background-color: antiquewhite;">
+    <div class="col-5">
+        <div class="container m-3 p-3 shadow" style="background-color: antiquewhite;">
             <h5 class="text-center">käyttäjätiedot</h5>
             <hr>
             <h5 style="text-shadow: 1px;">käyttäjänimi: {{ user.username }}</h5>
@@ -89,7 +92,7 @@
             {% endif %}
         </div>
 
-        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:aliceblue; max-height: 600px; overflow-y: scroll;">
+        <div class="container m-3 p-3 shadow" style="background-color:aliceblue; max-height: 600px; overflow-y: scroll;">
             <h5 class="text-center">Selaa käyttäjiä</h5>
             <hr>
             <ul>
@@ -103,8 +106,8 @@
             </div>
 
     </div>
-    <div class="col">
-        <div class="container mt-2 ml-2 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
+    <div class="col-5">
+        <div class="container m-3 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
             <h5 class="text-center">käyttäjän {{ user.username }} ystävät ({{ user.friends | length }})</h5>
             <hr>
             <ul>
