@@ -41,9 +41,15 @@ Tapahtumilla ei myöskään ole varsinaisesti eri kategorioita, joihin ne jaetta
 
 Ominaisuus, jota alkuperäisessä suunnitelmassa ei ollut, mutta julkaistuun versioon tuli, on viestien lähettäminen toisille käyttäjille.
 
+## Jatkokehitys
+
+Kurssi on päättynyt ja jatkan sovelluksen kehittämistä omaksi ilokseni ja harjoittelumielessä.
+Uusia ominaisuuksia saattaa ilmestyä silloin tällöin. Jos on kiinnostusta ja ideoita tai parannusehdotuksia, ole hyvä ja
+hyppää kelkkaan! Esitä ideasi tai tee pull request.
+
 ### Parannettavaa ja jatkokehitysideoita
 
-* Tekstikenttien muotoilussa tapahtuma ja viestilomakkeissa on parannettavaa
+* Tekstikenttien muotoilussa tapahtuma- ja viestilomakkeissa on parannettavaa
 * käyttöliittymän ulkoasu ja käytettävyys ovat jokseenkin kömpelöitä
 * koodissa on paljon refaktoroinnin ja siistimisen varaa
 * tapahtumakutsujen ja viestien poistomahdollisuus
