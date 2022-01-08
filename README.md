@@ -4,15 +4,10 @@
 > ##### Sovellus Herokussa
 >
 > * Voit luoda sovelluksessa oman käyttäjätunnuksen
-> * Voit myös testata admin-tunnusta:
->
->> käyttäjätunnus: **admin**
->>
->> salasana: **salakana**
->> 
 >
 > - linkki sovellukseen: <https://tapahtuu.herokuapp.com>
 
+> Huom: Syksyn kurssin aikainen admin-tunnus ei ole enää käytössä
 
 Harjoitustyön aiheena on tapahtumakalenteri-sovellus. Sovellukseen voi lisätä tapahtumia ja selata niitä.
 Jokaisella tapahtumalla on kategoria (teatteriesitys, peli-ilta, siivoustalkoot jne.) ja tapahtuma-aika
