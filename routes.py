@@ -274,6 +274,11 @@ def message():
     if request.method == "GET" and logged_in():
         messages_sent = messages.sent(logged_in())
         messages_received = messages.received(logged_in())
+        if not messages_sent:
+            messages_sent = []
+        if not messages_received:
+            messages_received = []
+            
         return render_template("messages.html",
                                friends=friends.get_friends(logged_in()),
                                messages_sent=messages_sent,
