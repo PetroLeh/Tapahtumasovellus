@@ -278,14 +278,18 @@ def message():
             messages_sent = []
         if not messages_received:
             messages_received = []
-            
+
         return render_template("messages.html",
                                friends=friends.get_friends(logged_in()),
                                messages_sent=messages_sent,
                                messages_received=messages_received)
     if request.method == "POST" and logged_in():
-        receiver = request.form["receiver"]
-        content = request.form["content"]
+        try:
+            receiver = request.form["receiver"]
+            content = request.form["content"]
+        except:
+            return render_template("error.html",
+                                   message="viestin lähettämisessä tapahtui virhe: Viestillä ei ole vastaanottajaa tai sisältöä.")            
         if not messages.send_message(logged_in(), receiver, content):
             return render_template("error.html",
                                    message="viestin lähettämisessä tapahtui virhe")
