@@ -7,6 +7,16 @@ from datetime import datetime
 
 ########        Some help functions
 
+def empty_event(description:str, info:str) -> bool:
+    if description is not None and description.strip() != "" or info is not None and info.strip() != "":
+        return False
+    return True
+
+def if_empty(attr1: str, attr2:str) -> str:
+    if not attr1 or attr1.strip() == "":
+        return attr2
+    return attr1
+
 def validate_times(start_time, end_time):
     now = datetime.now()
     st = now
@@ -65,7 +75,7 @@ def index():
     if logged_in():
         eventlist, query_successfull = events.list_events(order_by=session["event_sorter"], event_filter=session["event_filter"])
     else:
-        eventlist, query_successfull = events.list_events(order_by="start_time", event_filter=None)
+        eventlist, query_successfull = events.list_events(order_by="created_at DESC", event_filter=None)
     if query_successfull:
         return render_template("index.html", eventlist=eventlist)
     return render_template("error.html",
@@ -120,14 +130,23 @@ def create_event():
     if request.method == "POST" and logged_in():
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
+
         start_time, end_time, message = validate_times(request.form["start_time"],
                                                        request.form["end_time"])
+        description = request.form["description"]
+        info = request.form["info"]
+        if empty_event(description, info):
+            return render_template("error.html",
+                                   message="tapahtumaa ei lisätty, koska siitä ei annettu mitään tietoja")
+        description = if_empty(description, "(ei kuvausta)")
+        info = if_empty(info, f"(ei lisätietoja tapahtumasta '{description}')")
+
         event = Event(users.logged_in(),
                       None,          # 'event.created_at' is set to None here.
                       start_time,    # Correct timestamp will be set in
                       end_time,      # create() method in event_db_dao.
-                      request.form["description"],
-                      request.form["info"])
+                      description,
+                      info)
         duplicates = events.duplicates(event)
         if duplicates:
             events.temp_event = event
@@ -172,13 +191,19 @@ def event(id):
     event.created_at = parse_time(event.created_at)
 
     friends_invited = friends.who_are_invited_to_event(id, logged_in())
+    friends_attending = friends.who_are_attending_to_event(id, logged_in())
+    attendances = events.all_attendances_to_event(id)
+    print(attendances)
+    
     return render_template("event.html",
                            id=id,
                            username=users.username(event.user_id),
                            event=event,
+                           attendances=attendances,
                            is_attending=users.user_attending_to(logged_in(), id),
                            friends=friends.get_friends(logged_in()),
-                           friends_invited=friends_invited)
+                           friends_invited=friends_invited,
+                           friends_attending=friends_attending)
 
 @app.route("/event/<int:id>/attend")
 def attend_event(id):

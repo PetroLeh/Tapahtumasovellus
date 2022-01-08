@@ -39,3 +39,6 @@ class EventService:
 
     def invitations_to_user(self, id):
         return self.dao.invitations_to_user(id)
+
+    def all_attendances_to_event(self, id):
+        return self.dao.all_attendances_to_event(id)

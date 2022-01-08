@@ -31,3 +31,6 @@ class FriendService:
     
     def who_are_invited_to_event(self, event_id, by_user):
         return self.dao.who_are_invited_to_event(event_id, by_user)
+
+    def who_are_attending_to_event(self, event_id, user_id):
+        return self.dao.who_are_attending_to_event(event_id, user_id)

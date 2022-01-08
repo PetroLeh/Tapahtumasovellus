@@ -70,3 +70,17 @@ def who_are_invited_to_event(event_id, by_user):
     result = db.session.execute(sql, {"event_id": event_id,
                                       "by_user": by_user})
     return result.fetchall()
+
+def who_are_attending_to_event(event_id, user_id):
+    sql = """SELECT u.id, u.username, 
+            (SELECT COUNT(*) FROM attendances WHERE 
+                event_id=:event_id 
+                    AND user_id IN (
+                        SELECT user2 FROM friends WHERE user1=:user_id)
+                        )
+            FROM attendances a LEFT JOIN users u ON a.user_id=u.id 
+            WHERE a.event_id=:event_id AND a.user_id IN (
+                SELECT user2 FROM friends WHERE user1=:user_id)"""
+    result = db.session.execute(sql, {"event_id": event_id,
+                                      "user_id": user_id})
+    return result.fetchall()

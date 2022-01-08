@@ -23,14 +23,8 @@
         {% for duplicate in duplicates %}
         <div class="container p-5 border shadow bg-white mt-3" style="width: 40rem;">
             <div class="card p-1 border rounded" style="width: 35rem;">
-            <h5 class="card-header text-center">
-                {{ duplicate.description }}
-            </h5>
-            <div class="card-body border rounded wrap">
-                <p class="card-text wrap">
-                    {{ duplicate.info }}
-                </p>
-            </div>
+            <h5 class="card-header text-center">{{ duplicate.description }}</h5>
+            <textarea class="textcontent" style="text-indent: 0px; height: 300px" readonly>{{ duplicate.info }}</textarea>
             <div class="card-body">
                 <p class="card-text">
                     Alkaa: <b>{{ start_time }}</b>

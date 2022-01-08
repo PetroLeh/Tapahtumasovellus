@@ -12,11 +12,10 @@ class Event:
 def list_events(order_by, event_filter):
     try:
         by_user = ""
-        order_by = "e." + order_by
         if event_filter:
             by_user = "AND u.id="  + str(event_filter)
         sql = "SELECT e.id AS id, COALESCE(e.description, 'ei kuvausta') AS description, e.start_time AS start_time, u.username AS username FROM events e, users u " \
-            "WHERE e.user_id = u.id " + by_user + " ORDER BY " + order_by + ", description"
+            "WHERE e.user_id = u.id " + by_user +" ORDER BY e." + order_by + ", description"
         result = db.session.execute(sql)
         eventlist = result.fetchall()
         return eventlist, True
@@ -38,7 +37,7 @@ def create(event):
     if not event:
         return False    
     if event.description is None or event.description.strip() == "":
-        event.description = "ei kuvausta"
+        event.description = "(ei kuvausta)"
     try:
         sql = "INSERT INTO events (user_id, created_at, start_time, end_time, description, info) " \
             "VALUES (:user_id, NOW(), NULLIF(:start_time, '')::TIMESTAMP , NULLIF(:end_time, '')::TIMESTAMP, :description, :info) RETURNING id"
@@ -92,5 +91,11 @@ def invitations_to_user(id):
     sql = "SELECT i.event_id, e.description, i.invited_by, u.username AS invited_by_name " \
           "FROM invitations i INNER JOIN events e ON i.event_id=e.id " \
           "INNER JOIN users u ON i.invited_by=u.id WHERE i.user_id=:id"
+    result = db.session.execute(sql, {"id": id})
+    return result.fetchall()
+
+def all_attendances_to_event(id):
+    sql = "SELECT u.id, u.username, (SELECT COUNT(*) FROM attendances WHERE event_id=:id) " \
+          "FROM attendances a LEFT JOIN users u ON a.user_id=u.id WHERE a.event_id=:id"
     result = db.session.execute(sql, {"id": id})
     return result.fetchall()

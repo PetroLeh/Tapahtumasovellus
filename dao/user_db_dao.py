@@ -16,7 +16,7 @@ def login(username, password) -> bool:
         session["csrf_token"] = token_hex(16)
 
         session["event_filter"] = None
-        session["event_sorter"] = "start_time"
+        session["event_sorter"] = "created_at DESC"
 
         return True
     return False
