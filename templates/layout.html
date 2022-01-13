@@ -33,15 +33,15 @@
         {% endif %}
         {% if session.user_id %}
         <nav class="navbar sticky-top navbar-expand-lg navbar-light mb-3" style="background-color: rgb(200, 180, 240);">
-            <a class="navbar-brand" href="/">Tapahtumat</a>
+            <a class="navbar-brand" href="/">Etusivu</a>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href={{ url_for("user", id=session.user_id) }}>
-                        <b>{{ session.username }}</b>
+                        <b>{{ session.username }} oma sivu</b>
                     </a> 
-                </li>             
-                <li class="nav-item"><a class="nav-link" href="/event">luo tapahtuma</a></li>
+                </li>
                 <li class="nav-item"><a class="nav-link" href="/messages">viestit {% if session.new_messages %} <span>(uusia: {{ session.new_messages }})</span>{% endif %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="/event">luo tapahtuma</a></li>
                 <li class="nav-item"><a class="nav-link" href="/logout">kirjaudu ulos</a></li>
             </ul>
         </nav>
