@@ -46,7 +46,7 @@ class UserService:
             del session["event_filter"]
             del session["event_sorter"]
 
-            if session["new_messages"]:
+            if session.get("new_messages"):
                 del session["new_messages"]
 
     def logged_in(self) -> int:
@@ -73,6 +73,3 @@ class UserService:
 
     def user_attending_to(self, user_id, event_id):
         return self.dao.user_attending_to(user_id, event_id)
-
-    def all_events_user_is_attending(self, user_id):
-        return self.dao.all_events_user_is_attending(user_id)
