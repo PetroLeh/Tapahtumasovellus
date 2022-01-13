@@ -42,3 +42,9 @@ class EventService:
 
     def all_attendances_to_event(self, id):
         return self.dao.all_attendances_to_event(id)
+
+    def all_events_user_is_attending(self, user_id):
+        return self.dao.all_events_user_is_attending(user_id)
+
+    def remove_invitation(self, invitation_id):
+        return self.dao.remove_invitation(invitation_id)

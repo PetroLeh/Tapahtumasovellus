@@ -37,7 +37,7 @@
     </div>
     <div class="col-5">
         <div class="container m-3 p-3 shadow" style="background-color:rgb(255, 220, 220); max-height: 300px; overflow-y: scroll;">
-            <h5 class="text-center">ystävät ({{ user.friends | length }})</h5>
+            <h5 class="text-center">{% if user.id != session.user_id %}käyttäjän {{ user.username }}{% endif %} ystävät ({{ user.friends | length }})</h5>
             <hr>
             <ul>
                 {% for friend in user.friends %}
@@ -47,7 +47,7 @@
                 {% endfor %}
                 </ul>
             <hr>
-            <h5 class="text-center">ystäväkutsut ({{ user.friend_invitations | length }})</h5>
+            <h5 class="text-center">{% if user.id != session.user_id %}käyttäjän {{ user.username }}{% endif %} ystäväkutsut ({{ user.friend_invitations | length }})</h5>
             <hr>
             <ul>
                 {% for invitation in user.friend_invitations %}
@@ -64,10 +64,31 @@
             <h5 class="text-center">Tapahtumat, joihin {% if session.user_id == user.id %}sinut {% else %}{{ user.username }} {% endif %}on kutsuttu</h5>
             <hr>
             <ul>
-            {% for invitation in event_invitations %}
+            {% if user.id == session.user_id %}
+                {% for invitation in event_invitations %}
+                    <li style="margin: 5px;">
+                        <a href={{ url_for("user", id=invitation.invited_by) }}>{{ invitation.invited_by_name }}</a> kutsui sinut tapahtumaan
+                        <span><a href={{ url_for("event", id=invitation.event_id) }}>{{ invitation.description }}</a></span>
+                        <span>&emsp;</span><span><a href={{ url_for("remove_invitation", id=invitation.id) }}>(poista kutsu)</a></span><br>
+                    </li>
+                {% endfor %}
+            {% else %}
+                {% for invitation in event_invitations %}
+                <li style="margin: 5px;">
+                    <a href={{ url_for("user", id=invitation.invited_by) }}>{{ invitation.invited_by_name }}</a> kutsui käyttäjän {{user.username}} tapahtumaan
+                    <span><a href={{ url_for("event", id=invitation.event_id) }}>{{ invitation.description }}</a></span><br>                    
+                </li>
+                {% endfor %}
+            {% endif %}
+            </ul>
+        </div>
+        <div class="container m-3 p-3 shadow" style="background-color:aliceblue; max-height: 300px; overflow-y: scroll;">
+            <h5 class="text-center">Tapahtumat, joihin {% if session.user_id == user.id %}olet {% else %}{{ user.username }} on{% endif %} ilmoittautunut</h5>
+            <hr>
+            <ul>
+            {% for event in attended_events %}
             <li style="margin: 5px;">
-                <a href={{ url_for("user", id=invitation.invited_by) }}>{{ invitation.invited_by_name }}</a> kutsui sinut tapahtumaan
-                <span><a href={{ url_for("event", id=invitation.event_id) }}>{{ invitation.description }}</a></span><br>
+                <a href={{ url_for("event", id=event.id) }}>{{ event.description }}</a><br>
             </li>
             {% endfor %}
             </ul>

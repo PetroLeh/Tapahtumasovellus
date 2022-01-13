@@ -224,6 +224,13 @@ def invite_to_event(id):
         friends.invite_to_event(logged_in(), friends_to_invite, id)
     return redirect("/event/" + str(id))
 
+@app.route("/event/invitation/remove/<int:id>")
+def remove_invitation(id):
+    if logged_in():
+        events.remove_invitation(id)
+        return redirect("/user/" + str(logged_in()))
+    return redirect("/")
+
 @app.route("/sort_method/<string:sorter>")
 def sort_method(sorter):
     session["event_sorter"] = sorter
@@ -242,6 +249,7 @@ def user(id):
                                has_friend_invitation=friends.has_friend_invitation(logged_in(), id),
                                has_invited_as_a_friend=friends.has_friend_invitation(id, logged_in()),
                                event_invitations=events.invitations_to_user(id),
+                               attended_events=events.all_events_user_is_attending(id),
                                all_users=users.get_all(logged_in()))                        
     return redirect("/")
 

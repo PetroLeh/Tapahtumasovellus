@@ -88,7 +88,7 @@ def duplicates(event):
     return duplicates
 
 def invitations_to_user(id):
-    sql = "SELECT i.event_id, e.description, i.invited_by, u.username AS invited_by_name " \
+    sql = "SELECT i.id, i.event_id, e.description, i.invited_by, u.username AS invited_by_name " \
           "FROM invitations i INNER JOIN events e ON i.event_id=e.id " \
           "INNER JOIN users u ON i.invited_by=u.id WHERE i.user_id=:id"
     result = db.session.execute(sql, {"id": id})
@@ -99,3 +99,18 @@ def all_attendances_to_event(id):
           "FROM attendances a LEFT JOIN users u ON a.user_id=u.id WHERE a.event_id=:id"
     result = db.session.execute(sql, {"id": id})
     return result.fetchall()
+
+def all_events_user_is_attending(user_id):
+    sql = "SELECT e.id, e.description, e.start_time FROM events e, attendances a " \
+          "WHERE e.id=a.event_id AND a.user_id=:user_id"
+    result = db.session.execute(sql, {"user_id": user_id})
+    return result.fetchall()
+
+def remove_invitation(invitation_id):
+    try:
+        sql = "DELETE FROM invitations WHERE id=:invitation_id"
+        db.session.execute(sql, {"invitation_id": invitation_id})
+        db.session.commit()
+        return True
+    except:
+        return False
