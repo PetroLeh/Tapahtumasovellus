@@ -74,10 +74,14 @@ def logged_in():
 def index():
     if logged_in():
         eventlist, query_successfull = events.list_events(order_by=session["event_sorter"], event_filter=session["event_filter"])
+        new_messages = len(messages.new_messages(logged_in()))
+        session["new_messages"] = new_messages
     else:
         eventlist, query_successfull = events.list_events(order_by="created_at DESC", event_filter=None)
+    
     if query_successfull:
         return render_template("index.html", eventlist=eventlist)
+
     return render_template("error.html",
                            message="Virhe tapahtumien lataamisessa")
 
@@ -268,7 +272,6 @@ def add_friend(id):
     return redirect("/")
 
 ########        messages
-
 @app.route("/messages", methods=["GET", "POST"])
 def message():
     if request.method == "GET" and logged_in():
@@ -278,6 +281,10 @@ def message():
             messages_sent = []
         if not messages_received:
             messages_received = []
+
+        if messages.new_messages(logged_in()):
+            messages.mark_all_as_read(logged_in())
+            del session["new_messages"]
 
         return render_template("messages.html",
                                friends=friends.get_friends(logged_in()),

@@ -40,11 +40,14 @@ class UserService:
         if session.get("user_id"):
             del session["is_admin"]
             del session["user_id"]
-            del session["username"]
+            del session["username"]            
             del session["csrf_token"]
 
             del session["event_filter"]
             del session["event_sorter"]
+
+            if session["new_messages"]:
+                del session["new_messages"]
 
     def logged_in(self) -> int:
         return session.get("user_id", 0)

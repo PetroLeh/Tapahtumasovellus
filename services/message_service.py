@@ -11,3 +11,9 @@ class MessageService:
     
     def received(self, user_id):
         return self.dao.received(user_id)
+
+    def new_messages(self, user_id):
+        return self.dao.new_messages(user_id)
+
+    def mark_all_as_read(self, user_id):
+        return self.dao.mark_all_as_read(user_id)

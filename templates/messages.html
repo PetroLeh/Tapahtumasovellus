@@ -3,6 +3,34 @@
 {% block page_content %}
 
 {% if session.user_id %}
+<div class="container p-2 border shadow bg-white">
+    <h5 class="text-center">Kirjoita uusi viesti</h5>
+    <hr>
+    <form action="/messages" method="POST">
+        <h5>valitse <span id="friendBox" class="btn btn-secondary dropdown-toggle" onclick="showFriends()">vastaanottaja</span> viestille</h5>
+        <div id="checkboxes" style="max-height: 150px; overflow-y: scroll;">
+              {% for friend in friends %}
+            <label for="{{ friend.username }}">
+                <input type="radio" name="receiver" value={{ friend.id }} required/> {{ friend.username }}
+            </label>
+            {% endfor %}
+        </div>
+        <div class="form-group row">
+            <label for="info" class="col-2 col-form-label">Viesti:</label>
+            <div class="col">
+                <textarea rows="5" cols="40" id="content" name="content" placeholder="kirjoita viesti tähän"></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2"></div>
+            <div class="col-1">
+                <input type="submit" value="lähetä" class="btn btn-primary">
+            </div>
+        </div>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">    
+    </form>
+</div>
+
 <div class="row">
     <div class="col">
         <div class="container p-3 m-3 border shadow bg-white rounded" style="max-height: 600px; overflow-y: scroll;">        
@@ -52,8 +80,9 @@
                         </td>
                         <td>
                             {{ message.created_at.strftime("%d.%m.%Y %H:%M") }}
+                            {% if not message.read %} <b style="color:lightpink;">uusi</b> {% endif %}
                         </td>
-                        <td>
+                        <td>                      
                             <textarea class="textcontent" style="height: 200px" readonly>{{ message.message }}</textarea>
                         </td>
                     </tr>
@@ -62,34 +91,6 @@
             </table>
         </div>
     </div>
-</div>
-
-<div class="container p-2 border shadow bg-white">
-    <h5 class="text-center">Kirjoita viesti</h5>
-    <hr>
-    <form action="/messages" method="POST">
-        <h5>valitse <span id="friendBox" class="btn btn-secondary dropdown-toggle" onclick="showFriends()">vastaanottaja</span> viestille</h5>
-        <div id="checkboxes" style="max-height: 150px; overflow-y: scroll;">
-              {% for friend in friends %}
-            <label for="{{ friend.username }}">
-                <input type="radio" name="receiver" value={{ friend.id }} required/> {{ friend.username }}
-            </label>
-            {% endfor %}
-        </div>
-        <div class="form-group row">
-            <label for="info" class="col-2 col-form-label">Viesti:</label>
-            <div class="col">
-                <textarea rows="5" cols="40" id="content" name="content" placeholder="kirjoita viesti tähän"></textarea>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-2"></div>
-            <div class="col-1">
-                <input type="submit" value="lähetä" class="btn btn-primary">
-            </div>
-        </div>
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">    
-    </form>
 </div>
 
 <script>

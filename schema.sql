@@ -63,6 +63,7 @@ CREATE TABLE messages (
     created_at TIMESTAMP,
     user_from INTEGER REFERENCES users ON DELETE SET NULL,
     user_to INTEGER REFERENCES users ON DELETE SET NULL,
+    read BOOLEAN DEFAULT false,
     message TEXT
 );
 
