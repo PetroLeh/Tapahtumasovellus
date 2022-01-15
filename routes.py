@@ -104,7 +104,7 @@ def logout():
     users.logout()
     return redirect("/")
 
-########        register new user
+########        users
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
@@ -125,6 +125,12 @@ def register():
             return render_template("error.html",
                                    message="Käyttäjätunnuksen luomisessa tapahtui odottamaton virhe")
     return redirect("/")
+
+@app.route("/users")
+def all_users():
+    if not logged_in():
+        return redirect("/")
+    return render_template("users.html", all_users=users.get_all(logged_in()))
 
 ########        events
 @app.route("/event", methods=["GET", "POST"])

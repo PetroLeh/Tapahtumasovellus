@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% if session.username %}
+{% block title %}Käyttäjät{% endblock %}
+{% block page_content %}
+
+<div class="container m-3 p-3 shadow" style="background-color:aliceblue; max-height: 600px; overflow-y: scroll;">
+    <h5 class="text-center">Selaa käyttäjiä</h5>
+    <hr>
+    <ul>
+    {% for u in all_users %}
+        <li style="margin: 5px;">
+            <a href={{ url_for("user", id=u.id)}}>{{ u.username }}</a>
+            {% if u.is_friend %}<span>(ystävä)</span>{% endif %} <br>
+        </li>            
+    {% endfor %}
+    </ul>
+    </div>
+{% endblock %}
+{% endif %}

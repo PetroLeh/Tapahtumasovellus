@@ -69,3 +69,4 @@ def get_all(user_id):
         "LEFT JOIN friends f ON f.user1=:user_id AND f.user2=u.id ORDER BY u.username"
     result = db.session.execute(sql, {"user_id": user_id})
     return result.fetchall()
+    
