@@ -67,3 +67,9 @@ CREATE TABLE messages (
     message TEXT
 );
 
+CREATE TABLE login_history (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    login_time TIMESTAMP,
+    logout_time TIMESTAMP
+);

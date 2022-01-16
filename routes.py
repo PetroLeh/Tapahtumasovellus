@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, session, abort
 from app import app
 
-from service_config import Event, events, users, friends, messages
+from service_config import Event, events, users, friends, messages, history
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 ########        Some help functions
 
@@ -67,6 +67,21 @@ def remove_from_list(original_list, to_remove: list):
 def logged_in():
     return users.logged_in()
 
+def record_login_history(login_or_logout: str):
+    if login_or_logout == "login":
+        login_time_str = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+        login_time = datetime.strptime(login_time_str, "%Y-%m-%d %H:%M:%S")
+        session["login_time"] = login_time_str
+        history.record_login(logged_in(), login_time) 
+        return
+    elif login_or_logout == "logout":
+        login_time = datetime.strptime(session["login_time"], "%Y-%m-%d %H:%M:%S")
+        logout_time_str = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+        logout_time = datetime.strptime(logout_time_str, "%Y-%m-%d %H:%M:%S")
+        history.record_logout(logged_in(), login_time, logout_time)
+        return
+    raise ValueError(f"Record_login_history should get 'login' or 'logout' as an attribute.\n'{login_or_logout}' is not a valid attribute.")
+
 ########        routes:
 
 ########        main page
@@ -92,8 +107,9 @@ def login():
         return render_template("login.html")
     if request.method == "POST":
         username = request.form["username"]
-        password = request.form["password"]
+        password = request.form["password"]        
         if users.login(username, password):
+            record_login_history("login")
             return redirect("/")
         return render_template("login.html",
                             message="kirjautuminen ei onnistunut")
@@ -101,7 +117,9 @@ def login():
 
 @app.route("/logout")
 def logout():
-    users.logout()
+    if logged_in():
+        record_login_history("logout")
+        users.logout()
     return redirect("/")
 
 ########        users
