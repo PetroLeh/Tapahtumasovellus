@@ -335,3 +335,10 @@ def message():
         return redirect("/messages")
     return redirect("/")
 
+########        history
+@app.route("/history")
+def show_login_history():
+    if logged_in() and users.is_admin():
+        login_history = history.get_records()
+        return render_template("history.html", login_history=login_history)
+    return redirect("/")

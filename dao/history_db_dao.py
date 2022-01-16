@@ -20,3 +20,9 @@ def record_logout(user_id, login_time, logout_time):
         return True
     except:
         return False
+
+def get_records():
+    sql = "SELECT h.user_id, u.username, h.login_time, h.logout_time FROM login_history h " \
+          "LEFT JOIN users u ON h.user_id=u.id ORDER BY login_time DESC"
+    result = db.session.execute(sql)
+    return result.fetchall()

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Historia{% endblock %}
+{% block page_content %}
+
+{% if session.is_admin %}
+    <div class="container p-2 border shadow bg-white">
+        <h5 class="text-center">Kirjautumishistoria</h5>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>käyttäjä</th>
+                <th>kirjautunut sisään</th>
+                <th>kirjautunut ulos</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for record in login_history %}
+                <tr>
+                    <td>{{ record.username }}</td>
+                    <td>{{ record.login_time }}</td>
+                    {% if record.logout_time %}
+                    <td>{{ record.logout_time }}</td>
+                    {% else %}
+                    <td>ei uloskirjautumista</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock %}

@@ -8,3 +8,6 @@ class HistoryService:
     
     def record_logout(self, user_id, login_time, logout_time):
         return self.dao.record_logout(user_id, login_time, logout_time)
+
+    def get_records(self):
+        return self.dao.get_records()

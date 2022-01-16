@@ -43,6 +43,9 @@
                 <li class="nav-item"><a class="nav-link" href="/messages">viestit {% if session.new_messages %} <span>(uusia: {{ session.new_messages }})</span>{% endif %}</a></li>
                 <li class="nav-item"><a class="nav-link" href="/event">luo tapahtuma</a></li>
                 <li class="nav-item"><a class="nav-link" href="/users">selaa käyttäjiä</a></li>
+                {% if session.is_admin %}
+                <li class="nav-item"><a class="nav-link" href="/history">historia</a></li>
+                {% endif %}
                 <li class="nav-item"><a class="nav-link" href="/logout">kirjaudu ulos</a></li>
             </ul>
         </nav>
