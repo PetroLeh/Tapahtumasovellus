@@ -5,7 +5,7 @@
 >
 > * Voit luoda sovelluksessa oman käyttäjätunnuksen
 >
-> - linkki sovellukseen: <https://tapahtuu.herokuapp.com>
+> - linkki sovellukseen: Sovellus oli alunperin julkaistu Herokussa. Sovellus ei kuitenkaan enää ole siellä Herokun muutettua käytäntöjään ilmaisten tilien suhteen.
 
 > Huom: Syksyn kurssin aikainen admin-tunnus ei ole enää käytössä
 
